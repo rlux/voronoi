@@ -34,7 +34,12 @@ class Rectangle
 {
 public:
 	Rectangle(const Point& a, const Point& b);
-	Rectangle(real top, real left, real width, real height);
+	Rectangle(real left, real top, real width, real height);
+
+	real x() const;
+	real y() const;
+	real width() const;
+	real height() const;
 	
 	real left() const;
 	real right() const;

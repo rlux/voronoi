@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QPaintEvent>
 #include <QResizeEvent>
+#include <QMouseEvent>
 #include <QList>
 #include <QPoint>
 
@@ -20,9 +21,15 @@ class MainWindow
 	protected:
 		voronoi::VoronoiDiagram diagram;
 		QPixmap pixmap;
+		QPoint offset;
+		QPoint lastMousePosition;
+		bool dragging;
 	
 		void paintEvent(QPaintEvent* event);
 		void resizeEvent(QResizeEvent* event);
+		void mouseMoveEvent(QMouseEvent* event);
+		void mousePressEvent(QMouseEvent* event);
+		void mouseReleaseEvent(QMouseEvent* event);
 		
 		void createVoronoiDiagram();
 		void recacheVoronoiDiagram();

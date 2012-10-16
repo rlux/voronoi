@@ -38,8 +38,28 @@ Rectangle::Rectangle(const Point& a, const Point& b)
 	_height = std::abs(a.y() - b.y());
 }
 
-Rectangle::Rectangle(real top, real left, real width, real height) : _top(top), _left(left), _width(width), _height(height)
+Rectangle::Rectangle(real left, real top, real width, real height) : _left(left), _top(top), _width(width), _height(height)
 {
+}
+
+real Rectangle::x() const
+{
+	return _left;
+}
+
+real Rectangle::y() const
+{
+	return _top;
+}
+
+real Rectangle::width() const
+{
+	return _width;
+}
+
+real Rectangle::height() const
+{
+	return _height;
 }
 
 real Rectangle::left() const

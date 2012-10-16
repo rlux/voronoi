@@ -5,10 +5,11 @@
 
 using namespace voronoi;
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), dragging(false)
 {
 	qsrand(1000); // static number to initialize rng
 	
+	setMouseTracking(true);
 	createVoronoiDiagram();
 }
 
@@ -38,9 +39,10 @@ void MainWindow::recacheVoronoiDiagram()
 	pixmap.fill(Qt::white);
 	
 	QPainter painter(&pixmap);
+	//painter.setRenderHint(QPainter::Antialiasing);
 	painter.setPen(Qt::black);
 	
-	geometry::Rectangle boundingBox(0, 0, width(), height());
+	geometry::Rectangle boundingBox(0, 0, 1280, 720);
 	
 	for (std::map<VoronoiSite*, VoronoiCell*>::iterator it = diagram.cells().begin(); it != diagram.cells().end(); ++it) {
 		std::pair<VoronoiSite*, VoronoiCell*> pair = *it;
@@ -49,9 +51,22 @@ void MainWindow::recacheVoronoiDiagram()
 		for (std::vector<VoronoiEdge*>::iterator edgesIt = cell->edges.begin(); edgesIt != cell->edges.end(); ++edgesIt) {
 			geometry::Line line = (*edgesIt)->getRenderLine(boundingBox);
 			
-			painter.drawLine(line.startPoint().x(), line.startPoint().y(), line.endPoint().x(), line.endPoint().y());
+			painter.drawLine(
+				offset.x()+line.startPoint().x(),
+				offset.y()+line.startPoint().y(),
+				offset.x()+line.endPoint().x(),
+				offset.y()+line.endPoint().y()
+			);
 		}
 	}
+	
+	painter.setPen(Qt::red);
+	painter.drawRect(
+		offset.x()+boundingBox.x(),
+		offset.y()+boundingBox.y(),
+		boundingBox.width(),
+		boundingBox.height()
+	);
 }
 
 void MainWindow::paintEvent(QPaintEvent* event)
@@ -64,6 +79,31 @@ void MainWindow::paintEvent(QPaintEvent* event)
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
 	recacheVoronoiDiagram();
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent* event)
+{
+	if (dragging) {
+		offset += event->pos()-lastMousePosition;
+		lastMousePosition = event->pos();
+		recacheVoronoiDiagram();
+		update();
+	}
+}
+
+void MainWindow::mousePressEvent(QMouseEvent* event)
+{
+	if (event->button()==Qt::LeftButton) {
+		lastMousePosition = event->pos();
+		dragging = true;
+	}
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent* event)
+{
+	if (event->button()==Qt::LeftButton) {
+		dragging = false;
+	}
 }
 
 QList<QPoint> MainWindow::getSites()
