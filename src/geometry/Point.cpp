@@ -126,7 +126,9 @@ bool Point::isValid() const {
 
 size_t PointHasher::operator()(const Point& p) const
 {
-	std::hash<real> hashFunction;
+	/*std::hash<real> hashFunction;
 	
 	return hashFunction(p.x()) ^ hashFunction(p.y());
+	*/
+	return 0;
 }

@@ -26,12 +26,8 @@
 
 #include <VoronoiEdge.h>
 
-#include <unordered_map>
-#include <iostream>
-
 using namespace voronoi;
 using namespace geometry;
-
 
 VoronoiEdge::VoronoiEdge(VoronoiSite* left, VoronoiSite* right) : left(left), right(right)
 {

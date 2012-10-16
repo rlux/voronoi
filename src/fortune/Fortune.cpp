@@ -26,9 +26,6 @@
 
 #include <fortune/Fortune.h>
 
-#include <unordered_map>
-#include <iostream>
-
 #include <geometry/Triangle.h>
 
 using namespace voronoi;
@@ -49,8 +46,8 @@ void Fortune::calculate()
 {
 	sweepPos = 0;
 	
-	for (VoronoiSite& site: diagram.sites()) {
-		addEvent(new SiteEvent(&site));
+	for (std::vector<VoronoiSite*>::iterator it = diagram.sites().begin(); it != diagram.sites().end(); ++it) {
+		addEvent(new SiteEvent(*it));
 	}
 	
 	while (Event* event = nextEvent()) {

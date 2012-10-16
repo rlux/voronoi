@@ -26,9 +26,6 @@
 
 #include <VoronoiCell.h>
 
-#include <unordered_map>
-#include <iostream>
-
 using namespace voronoi;
 using namespace geometry;
 

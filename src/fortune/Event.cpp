@@ -49,12 +49,12 @@ bool Event::operator<(const Event& event) const {
 
 SiteEvent* Event::asSiteEvent() const
 {
-	return isSiteEvent() ? (SiteEvent*)this : nullptr;
+	return isSiteEvent() ? (SiteEvent*)this : 0;
 }
 
 CircleEvent* Event::asCircleEvent() const
 {
-	return isCircleEvent() ? (CircleEvent*)this : nullptr;
+	return isCircleEvent() ? (CircleEvent*)this : 0;
 }
 
 SiteEvent::SiteEvent(VoronoiSite* site) : site(site)

@@ -30,7 +30,7 @@ using namespace voronoi;
 using namespace voronoi::fortune;
 using namespace geometry;
 
-BeachLine::BeachLine() : firstElement(nullptr)
+BeachLine::BeachLine() : firstElement(0)
 {
 }
 
@@ -38,7 +38,7 @@ Arc* BeachLine::arcFor(const Point& p) const
 {
 	for (Arc* arc=firstElement; arc; arc=arc->next) {
 		if (!arc->next) {
-			if (arc->site->position().y()==p.y()) return nullptr;
+			if (arc->site->position().y()==p.y()) return 0;
 			return arc;
 		}
 		
@@ -52,7 +52,7 @@ Arc* BeachLine::arcFor(const Point& p) const
 		}
 	}
 	
-	return nullptr;
+	return 0;
 }
 
 Arc* BeachLine::lastElement() const
@@ -68,7 +68,7 @@ void BeachLine::replaceArc(Arc* arc, VoronoiEdge* edge)
 	Arc* next = arc->next;
 	
 	if (!prev) {
-		firstElement = nullptr;
+		firstElement = 0;
 	}
 	
 	if (next) {

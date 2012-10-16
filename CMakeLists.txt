@@ -4,8 +4,6 @@ project(voronoi)
 
 set(target voronoi)
 
-add_definitions(-std=c++0x)
-
 include_directories("include")
 
 set(sources

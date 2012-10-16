@@ -26,6 +26,7 @@
 
 #include <geometry/Rectangle.h>
 #include <algorithm>
+#include <cmath>
 
 using namespace geometry;
 

@@ -34,8 +34,8 @@ using namespace geometry;
 
 Arc::Arc(VoronoiSite* site, VoronoiEdge* leftEdge) : site(site), leftEdge(leftEdge)
 {
-	prev = next = nullptr;
-	event = nullptr;
+	prev = next = 0;
+	event = 0;
 }
 
 Arc::~Arc()
@@ -99,12 +99,12 @@ void Arc::invalidateEvent()
 {
 	if (!event) return;
 	event->valid = false;
-	event = nullptr;
+	event = 0;
 }
 
 VoronoiEdge* Arc::rightEdge()
 {
-	if (!next) return nullptr;
+	if (!next) return 0;
 	return next->leftEdge;
 }
 

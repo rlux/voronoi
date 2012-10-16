@@ -37,7 +37,7 @@ class CircleEvent;
 class Arc
 {
 public:
-	Arc(VoronoiSite* site, VoronoiEdge* leftEdge = nullptr);
+	Arc(VoronoiSite* site, VoronoiEdge* leftEdge = 0);
 	~Arc();
 
 	void insert(Arc* arc);

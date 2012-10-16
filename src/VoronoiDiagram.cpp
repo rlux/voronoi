@@ -26,28 +26,28 @@
 
 #include <VoronoiDiagram.h>
 
-#include <unordered_map>
-
 #include <fortune/Fortune.h>
+#include <algorithm>
 
 using namespace voronoi;
 using namespace geometry;
 
-VoronoiDiagram::VoronoiDiagram() : data(new Data())
+VoronoiDiagram::VoronoiDiagram()
 {
 }
 
-VoronoiDiagram::Data::~Data()
+VoronoiDiagram::~VoronoiDiagram()
 {
-	for (VoronoiEdge* edge: edges) {
-		delete edge;
+	for (std::vector<VoronoiEdge*>::iterator it = _edges.begin(); it != _edges.end(); ++it) {
+		delete *it;
 	}
-	for (std::pair<VoronoiSite*, VoronoiCell*> pair: cells) {
-		delete pair.second;
+	
+	for (std::map<VoronoiSite*, VoronoiCell*>::iterator it = _cells.begin(); it != _cells.end(); ++it) {
+		delete it->second;
 	}
 }
 
-VoronoiDiagram VoronoiDiagram::create(const std::vector<VoronoiSite>& sites)
+VoronoiDiagram VoronoiDiagram::create(const std::vector<VoronoiSite*>& sites)
 {
 	VoronoiDiagram diagram;
 	diagram.initialize(sites);
@@ -55,46 +55,41 @@ VoronoiDiagram VoronoiDiagram::create(const std::vector<VoronoiSite>& sites)
 	return diagram;
 }
 
-const std::vector<VoronoiSite>& VoronoiDiagram::sites() const
+const std::vector<VoronoiSite*>& VoronoiDiagram::sites() const
 {
-	return data->sites;
+	return _sites;
 }
 
-std::vector<VoronoiSite>& VoronoiDiagram::sites()
+std::vector<VoronoiSite*>& VoronoiDiagram::sites()
 {
-	return data->sites;
+	return _sites;
 }
 
 const std::vector<VoronoiEdge*>& VoronoiDiagram::edges() const
 {
-	return data->edges;
+	return _edges;
 }
 
 std::vector<VoronoiEdge*>& VoronoiDiagram::edges()
 {
-	return data->edges;
+	return _edges;
 }
 
 const std::map<VoronoiSite*, VoronoiCell*>& VoronoiDiagram::cells() const
 {
-	return data->cells;
+	return _cells;
 }
 
 std::map<VoronoiSite*, VoronoiCell*>& VoronoiDiagram::cells()
 {
-	return data->cells;
+	return _cells;
 }
 
-void VoronoiDiagram::clear()
+void VoronoiDiagram::initialize(const std::vector<VoronoiSite*>& sites)
 {
-	data.reset(new Data());
-}
-
-void VoronoiDiagram::initialize(const std::vector<VoronoiSite>& sites)
-{
-	this->sites() = sites;
-	for (VoronoiSite& site: this->sites()) {
-		cells()[&site] = new VoronoiCell(&site);
+	_sites = sites;
+	for (std::vector<VoronoiSite*>::iterator it = _sites.begin(); it != _sites.end(); ++it) {
+		_cells[*it] = new VoronoiCell(*it);
 	}
 }
 
@@ -108,24 +103,25 @@ VoronoiEdge* VoronoiDiagram::createEdge(VoronoiSite* left, VoronoiSite* right)
 {
 	VoronoiEdge* edge = new VoronoiEdge(left, right);
 	
-	edges().push_back(edge);
-	cells()[left]->edges.push_back(edge);
-	cells()[right]->edges.push_back(edge);
+	_edges.push_back(edge);
+	_cells[left]->edges.push_back(edge);
+	_cells[right]->edges.push_back(edge);
 	
 	return edge;
 }
 
-void VoronoiDiagram::removeDuplicates(std::vector<VoronoiSite>& sites)
+bool compareSites(VoronoiSite* site1, VoronoiSite* site2)
 {
-	std::unordered_map<Point, VoronoiSite, PointHasher> hashedSites;
-	
-	for (VoronoiSite& site : sites) {
-		hashedSites.insert(std::pair<Point, VoronoiSite>(site.position(), site));
-	}
-	
-	sites.clear();
-	
-	for (std::pair<Point, VoronoiSite> pair : hashedSites) {
-		sites.push_back(pair.second);
-	}
+	return site1->position().x() < site2->position().x() && site1->position().y() < site2->position().y();
+}
+
+bool equalSites(VoronoiSite* site1, VoronoiSite* site2)
+{
+	return site1->position() == site2->position();
+}
+
+void VoronoiDiagram::removeDuplicates(std::vector<VoronoiSite*>& sites)
+{
+	std::sort(sites.begin(), sites.end(), compareSites);
+	std::unique(sites.begin(), sites.end(), equalSites);
 }
