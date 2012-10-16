@@ -37,10 +37,13 @@ class BeachLine
 public:
 	BeachLine();
 
+	bool isEmpty() const;
+	void addLast(Arc* arc);
+
 	Arc* arcFor(const geometry::Point& p) const;
 	void replaceArc(Arc* arc, VoronoiEdge* edge);
 	Arc* lastElement() const;
-
+private:
 	Arc* firstElement;
 };
 

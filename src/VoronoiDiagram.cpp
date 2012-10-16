@@ -47,11 +47,11 @@ VoronoiDiagram::~VoronoiDiagram()
 	}
 }
 
-VoronoiDiagram VoronoiDiagram::create(const std::vector<VoronoiSite*>& sites)
+VoronoiDiagram* VoronoiDiagram::create(const std::vector<VoronoiSite*>& sites)
 {
-	VoronoiDiagram diagram;
-	diagram.initialize(sites);
-	diagram.calculate();
+	VoronoiDiagram* diagram = new VoronoiDiagram();
+	diagram->initialize(sites);
+	diagram->calculate();
 	return diagram;
 }
 

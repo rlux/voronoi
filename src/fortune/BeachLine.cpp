@@ -34,6 +34,20 @@ BeachLine::BeachLine() : firstElement(0)
 {
 }
 
+bool BeachLine::isEmpty() const
+{
+	return firstElement==0;
+}
+
+void BeachLine::addLast(Arc* arc)
+{
+	if (!firstElement) {
+		firstElement = arc;
+	} else {
+		lastElement()->insert(arc);
+	}
+}
+
 Arc* BeachLine::arcFor(const Point& p) const
 {
 	for (Arc* arc=firstElement; arc; arc=arc->next) {

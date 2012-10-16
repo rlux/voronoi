@@ -57,7 +57,7 @@ CircleEvent* Event::asCircleEvent() const
 	return isCircleEvent() ? (CircleEvent*)this : 0;
 }
 
-SiteEvent::SiteEvent(VoronoiSite* site) : site(site)
+SiteEvent::SiteEvent(VoronoiSite* site) : _site(site)
 {
 }
 
@@ -68,10 +68,15 @@ bool SiteEvent::isSiteEvent() const
 
 Point SiteEvent::position() const
 {
-	return site->position();
+	return _site->position();
 }
 
-CircleEvent::CircleEvent(Arc* arc, Circle circle) : valid(true), arc(arc), circle(circle)
+VoronoiSite* SiteEvent::site() const
+{
+	return _site;
+}
+
+CircleEvent::CircleEvent(Arc* arc, Circle circle) : valid(true), _arc(arc), _circle(circle)
 {
 	arc->invalidateEvent();
 	arc->event = this;
@@ -84,7 +89,27 @@ bool CircleEvent::isCircleEvent() const
 
 Point CircleEvent::position() const
 {
-	return circle.center()-Point(0,circle.radius());
+	return _circle.center()-Point(0,_circle.radius());
+}
+
+bool CircleEvent::isValid() const
+{
+	return valid;
+}
+
+void CircleEvent::invalidate()
+{
+	valid = false;
+}
+
+Arc* CircleEvent::arc() const
+{
+	return _arc;
+}
+
+const Circle& CircleEvent::circle() const
+{
+	return _circle;
 }
 
 bool EventComparator::operator()(Event* event1, Event* event2) {

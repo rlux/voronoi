@@ -63,16 +63,16 @@ void Fortune::calculate()
 
 void Fortune::handleSiteEvent(SiteEvent* event)
 {
-	VoronoiSite* site = event->site;
+	VoronoiSite* site = event->site();
 	
-	if (!beachLine.firstElement) {
-		beachLine.firstElement = new Arc(site);
+	Arc* newArc = new Arc(site);
+	
+	if (beachLine.isEmpty()) {
+		beachLine.addLast(newArc);
 		return;
 	}
 	
 	Arc* arc = beachLine.arcFor(site->position());
-	
-	Arc* newArc = new Arc(site);
 	
 	if (arc) {
 		arc->invalidateEvent();
@@ -90,14 +90,14 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 
 void Fortune::handleCircleEvent(CircleEvent* event)
 {
-	if (!event->valid) return;
+	if (!event->isValid()) return;
 	
-	Arc* arc = event->arc;
+	Arc* arc = event->arc();
 	Arc* prev = arc->prev;
 	Arc* next = arc->next;
 	VoronoiEdge* leftEdge = arc->leftEdge;
 	VoronoiEdge* rightEdge = arc->rightEdge();
-	Point s = event->circle.center();
+	Point s = event->circle().center();
 	
 	VoronoiEdge* newEdge = diagram.createEdge(prev->site, next->site);
 	newEdge->adjustOrientation(arc->site->position());

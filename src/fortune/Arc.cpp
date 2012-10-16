@@ -98,7 +98,7 @@ void Arc::splitWith(Arc* arc)
 void Arc::invalidateEvent()
 {
 	if (!event) return;
-	event->valid = false;
+	event->invalidate();
 	event = 0;
 }
 

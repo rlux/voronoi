@@ -56,7 +56,9 @@ public:
 	virtual bool isSiteEvent() const;
 	virtual geometry::Point position() const;
 
-	VoronoiSite* site;
+	VoronoiSite* site() const;
+private:
+	VoronoiSite* _site;
 };
 	
 class CircleEvent : public Event
@@ -64,11 +66,16 @@ class CircleEvent : public Event
 public:
 	CircleEvent(Arc* arc, geometry::Circle circle);
 
-	virtual geometry::Point position() const;
 	virtual bool isCircleEvent() const;
+	virtual geometry::Point position() const;
 
-	Arc* arc;
-	geometry::Circle circle;
+	bool isValid() const;
+	void invalidate();
+	Arc* arc() const;
+	const geometry::Circle& circle() const;
+private:
+	Arc* _arc;
+	geometry::Circle _circle;
 	bool valid;
 };
 

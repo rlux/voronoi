@@ -41,7 +41,7 @@ public:
 	VoronoiDiagram();
 	~VoronoiDiagram();
 
-	static VoronoiDiagram create(const std::vector<VoronoiSite*>& sites);
+	static VoronoiDiagram* create(const std::vector<VoronoiSite*>& sites);
 	static void removeDuplicates(std::vector<VoronoiSite*>& sites);
 
 	const std::vector<VoronoiSite*>& sites() const;
@@ -59,6 +59,8 @@ protected:
 	std::vector<VoronoiSite*> _sites;
 	std::vector<VoronoiEdge*> _edges;
 	std::map<VoronoiSite*, VoronoiCell*> _cells;
+private:
+	VoronoiDiagram(const VoronoiDiagram&);
 };
 
 } //end namespace voronoi
