@@ -33,20 +33,26 @@ using namespace voronoi::fortune;
 using namespace geometry;
 
 Fortune::Fortune()
+: diagram(0)
 {
 }
 
 void Fortune::operator()(VoronoiDiagram& diagram)
 {
-	this->diagram = diagram;
+	this->diagram = &diagram;
 	calculate();
+	this->diagram = 0;
 }
 
 void Fortune::calculate()
 {
+	if (!diagram) {
+		return;
+	}
+	
 	sweepPos = 0;
 	
-	for (std::vector<VoronoiSite*>::iterator it = diagram.sites().begin(); it != diagram.sites().end(); ++it) {
+	for (std::vector<VoronoiSite*>::iterator it = diagram->sites().begin(); it != diagram->sites().end(); ++it) {
 		addEvent(new SiteEvent(*it));
 	}
 	
@@ -76,11 +82,11 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 	
 	if (arc) {
 		arc->invalidateEvent();
-		newArc->leftEdge = diagram.createEdge(arc->site, site);
+		newArc->leftEdge = diagram->createEdge(arc->site, site);
 		arc->splitWith(newArc);
 	} else {
 		Arc* last = beachLine.lastElement();
-		newArc->leftEdge = diagram.createEdge(last->site, site);
+		newArc->leftEdge = diagram->createEdge(last->site, site);
 		last->insert(newArc);
 	}
 	
@@ -99,7 +105,7 @@ void Fortune::handleCircleEvent(CircleEvent* event)
 	VoronoiEdge* rightEdge = arc->rightEdge();
 	Point s = event->circle.center();
 	
-	VoronoiEdge* newEdge = diagram.createEdge(prev->site, next->site);
+	VoronoiEdge* newEdge = diagram->createEdge(prev->site, next->site);
 	newEdge->adjustOrientation(arc->site->position());
 	newEdge->addPoint(s);
 	

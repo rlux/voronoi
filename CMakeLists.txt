@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.6)
 
 project(voronoi)
 
+option(BUILD_WITH_DEMO "Compile Voronoi++ with a demo using Qt" OFF)
+
 set(target voronoi)
 
 include_directories("include")
@@ -25,3 +27,7 @@ set(sources
 )
 
 add_library(${target} SHARED ${sources})
+
+if (BUILD_WITH_DEMO)
+	add_subdirectory("demo")
+endif (BUILD_WITH_DEMO)

@@ -51,7 +51,6 @@ public:
 	const std::map<VoronoiSite*, VoronoiCell*>& cells() const;
 	std::map<VoronoiSite*, VoronoiCell*>& cells();
 
-	void clear();
 	void initialize(const std::vector<VoronoiSite*>& sites);
 	void calculate();
 	VoronoiEdge* createEdge(VoronoiSite* left, VoronoiSite* right);

@@ -43,7 +43,7 @@ public:
 
 	void operator()(VoronoiDiagram& diagram);
 private:
-	VoronoiDiagram diagram;
+	VoronoiDiagram* diagram;
 
 	std::priority_queue<Event*, std::vector<Event*>, EventComparator> eventQueue;
 	BeachLine beachLine;
