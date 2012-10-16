@@ -16,12 +16,12 @@ Requirements
  * [gcc 4.6](http://gcc.gnu.org/)
  * [CMake 2.6](http://www.cmake.org/)
  
- Building
+Building
 ------------------------------------------
 
-    > mkdir build && cd build
-    > cmake ..
-    > make
+	> mkdir build && cd build
+	> cmake ..
+	> make
     
 License
 -----------
