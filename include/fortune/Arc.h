@@ -28,6 +28,7 @@
 
 #include <VoronoiSite.h>
 #include <VoronoiEdge.h>
+#include <geometry/Triangle.h>
 
 namespace voronoi {
 namespace fortune {
@@ -40,6 +41,8 @@ public:
 	Arc(VoronoiSite* site, VoronoiEdge* leftEdge = 0);
 	~Arc();
 
+	VoronoiSite* site() const;
+
 	void insert(Arc* arc);
 	void splitWith(Arc* arc);
 
@@ -47,11 +50,12 @@ public:
 
 	VoronoiEdge* rightEdge();
 
-	static geometry::Point intersection(const geometry::Point& focus1, const geometry::Point& focus2, geometry::real baseLineY, bool left);
+	bool getTriangle(geometry::Triangle& triangle) const; //TODO: find better name
+
+	//TODO: return solution set
+	static geometry::Point intersection(const geometry::Point& focus1, const geometry::Point& focus2, geometry::real baseLineY, bool left, bool& intersects);
 	static void connect(Arc* arc1, Arc* arc2);
 	static void remove(Arc* arc);
-
-	VoronoiSite* site;
 
 	VoronoiEdge* leftEdge;
 
@@ -59,6 +63,8 @@ public:
 	Arc* next;
 
 	CircleEvent* event;
+protected:
+	VoronoiSite* _site;
 };
 
 } //end namespace fortune

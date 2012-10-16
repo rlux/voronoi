@@ -40,7 +40,6 @@ public:
 	real radius() const;
 
 	bool contains(const Point& p) const;
-	bool isValid() const;
 protected:
 	Point _center;
 	real _radius;

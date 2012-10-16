@@ -57,7 +57,7 @@ private:
 	void handleSiteEvent(SiteEvent* event);
 	void handleCircleEvent(CircleEvent* event);
 
-	void checkCircleEvent(Arc* arc);
+	void checkForCircleEvent(Arc* arc);
 };
 
 } //end namespace fortune

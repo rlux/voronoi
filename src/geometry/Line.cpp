@@ -104,14 +104,18 @@ bool Line::addPoint(const Point& point)
 	}
 }
 
-Point Line::intersection(const Line& line) const
+Point Line::intersection(const Line& line, bool& intersects) const
 {
 	Point u = _direction;
 	Point v = line._direction;
 	Point w = _startPoint-line._startPoint;
 	real denominator = v.x()*u.y()-v.y()*u.x();
-	if (denominator==0) return Point();
+	if (denominator==0) {
+		intersects = false;
+		return Point();
+	}
 	real s = (v.y()*w.x()-v.x()*w.y())/denominator;
+	intersects = true;
 	return _startPoint+s*_direction;
 }
 
@@ -122,7 +126,8 @@ Point Line::normal() const
 
 Point Line::toPoint(const Point& point) const
 {
-	return point-intersection(Line::forDirection(point, normal()));
+	bool intersects;
+	return point-intersection(Line::forDirection(point, normal()), intersects);
 }
 
 bool Line::sameSide(const Point& p1, const Point& p2) const

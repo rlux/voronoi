@@ -82,16 +82,16 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 	
 	if (arc) {
 		arc->invalidateEvent();
-		newArc->leftEdge = diagram->createEdge(arc->site, site);
+		newArc->leftEdge = diagram->createEdge(arc->site(), site);
 		arc->splitWith(newArc);
 	} else {
 		Arc* last = beachLine.lastElement();
-		newArc->leftEdge = diagram->createEdge(last->site, site);
+		newArc->leftEdge = diagram->createEdge(last->site(), site);
 		last->insert(newArc);
 	}
 	
-	if (newArc->prev) checkCircleEvent(newArc->prev);
-	if (newArc->next) checkCircleEvent(newArc->next);
+	if (newArc->prev) checkForCircleEvent(newArc->prev);
+	if (newArc->next) checkForCircleEvent(newArc->next);
 }
 
 void Fortune::handleCircleEvent(CircleEvent* event)
@@ -105,35 +105,32 @@ void Fortune::handleCircleEvent(CircleEvent* event)
 	VoronoiEdge* rightEdge = arc->rightEdge();
 	Point s = event->circle().center();
 	
-	VoronoiEdge* newEdge = diagram->createEdge(prev->site, next->site);
-	newEdge->adjustOrientation(arc->site->position());
+	VoronoiEdge* newEdge = diagram->createEdge(prev->site(), next->site());
+	newEdge->adjustOrientation(arc->site()->position());
 	newEdge->addPoint(s);
 	
 	if (leftEdge) {
-		leftEdge->adjustOrientation(next->site->position());
+		leftEdge->adjustOrientation(next->site()->position());
 		leftEdge->addPoint(s);
 	}
 	if (rightEdge) {
-		rightEdge->adjustOrientation(prev->site->position());
+		rightEdge->adjustOrientation(prev->site()->position());
 		rightEdge->addPoint(s);
 	}
 		
 	beachLine.replaceArc(arc, newEdge);
 	
-	checkCircleEvent(prev);
-	checkCircleEvent(next);
+	checkForCircleEvent(prev);
+	checkForCircleEvent(next);
 }
 
-void Fortune::checkCircleEvent(Arc* arc)
+void Fortune::checkForCircleEvent(Arc* arc)
 {
 	arc->invalidateEvent();
 	
-	Arc* prev = arc->prev;
-	Arc* next = arc->next;
+	Triangle triangle;
+	if (!arc->getTriangle(triangle)) return;
 	
-	if (!prev || !next || prev->site == next->site) return;
-	
-	Triangle triangle(prev->site->position(), next->site->position(), arc->site->position());
 	if (triangle.isClockwise()) return;
 	
 	Circle circle = triangle.circumcircle();
