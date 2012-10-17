@@ -55,6 +55,9 @@ public:
 	Point endPoint() const;
 	Type type() const;
 	
+	void setStartPoint(const Point& point);
+	void setEndPoint(const Point& point);
+	
 	void invertDirection();
 	bool addPoint(const Point& point);
 
