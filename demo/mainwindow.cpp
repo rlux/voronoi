@@ -42,7 +42,8 @@ void MainWindow::recacheVoronoiDiagram()
 	//painter.setRenderHint(QPainter::Antialiasing);
 	painter.setPen(Qt::black);
 	
-	geometry::Rectangle boundingBox(0, 0, 1280, 720);
+	geometry::Polygon boundingBox;
+	boundingBox << geometry::Point(0, 0) << geometry::Point(0, 1280) << geometry::Point(1280, 720) << geometry::Point(0, 720);
 	
 	for (std::map<VoronoiSite*, VoronoiCell*>::iterator it = diagram.cells().begin(); it != diagram.cells().end(); ++it) {
 		std::pair<VoronoiSite*, VoronoiCell*> pair = *it;
@@ -62,10 +63,10 @@ void MainWindow::recacheVoronoiDiagram()
 	
 	painter.setPen(Qt::red);
 	painter.drawRect(
-		offset.x()+boundingBox.x(),
-		offset.y()+boundingBox.y(),
-		boundingBox.width(),
-		boundingBox.height()
+		offset.x()+0,
+		offset.y()+0,
+		1280,
+		720
 	);
 }
 

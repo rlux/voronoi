@@ -28,31 +28,24 @@
 
 #include <geometry/Point.h>
 #include <geometry/Line.h>
-#include <geometry/Rectangle.h>
-#include <geometry/Polygon.h>
+#include <vector>
 
-#include <VoronoiSite.h>
+namespace geometry {
 
-namespace voronoi {
-
-class VoronoiEdge
+class Polygon
 {
 public:
-	VoronoiEdge(VoronoiSite* left, VoronoiSite* right);
+	Polygon();
+	Polygon(std::vector<Point> points);
 
-	void addPoint(const geometry::Point& point);
-	void adjustOrientation(const geometry::Point& awayPoint);
-
-	geometry::Line getRenderLine(const geometry::Rectangle& boundingBox);
-	geometry::Line getRenderLine(const geometry::Polygon& boundingPolygon);
+	const std::vector<Point>& points() const;
+	const std::vector<Line>& edges() const;
+	bool contains(const Point& p) const;
+	
+	Polygon& operator<<(const Point& point);
 protected:
-	VoronoiSite* left;
-	VoronoiSite* right;
-
-	geometry::Line line;
-private:
-	geometry::Line getIntersectedBorderLine(const geometry::Point& direction, const geometry::Polygon& boundingPolygon);
+	std::vector<Point> _points;
+	std::vector<Line> _edges;
 };
 
-} //end namespace voronoi
-
+} //end namespace geometry

@@ -45,6 +45,11 @@ public:
 	real right() const;
 	real top() const;
 	real bottom() const;
+	
+	Point topLeft() const;
+	Point topRight() const;
+	Point bottomLeft() const;
+	Point bottomRight() const;
 protected:
 	real _top;
 	real _left;

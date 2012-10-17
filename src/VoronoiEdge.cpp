@@ -48,17 +48,30 @@ void VoronoiEdge::adjustOrientation(const Point& awayPoint)
 
 Line VoronoiEdge::getRenderLine(const Rectangle& boundingBox)
 {
+	Polygon boundingPolygon;
+	
+	boundingPolygon
+		<< boundingBox.topLeft()
+		<< boundingBox.topRight()
+		<< boundingBox.bottomRight()
+		<< boundingBox.bottomLeft();
+	
+	return getRenderLine(boundingPolygon);
+}
+
+Line VoronoiEdge::getRenderLine(const Polygon& boundingPolygon)
+{
 	Point a;
 	Point b;
 	
 	switch (line.type()) {
 		case Line::LINE:
-			a = line.intersection(getIntersectedBorderLine(-line.direction(), boundingBox)).point();
-			b = line.intersection(getIntersectedBorderLine(line.direction(), boundingBox)).point();
+			a = line.intersection(getIntersectedBorderLine(-line.direction(), boundingPolygon)).point();
+			b = line.intersection(getIntersectedBorderLine(line.direction(), boundingPolygon)).point();
 		break;
 		case Line::RAY:
 			a = line.startPoint();
-			b = line.intersection(getIntersectedBorderLine(line.direction(), boundingBox)).point();
+			b = line.intersection(getIntersectedBorderLine(line.direction(), boundingPolygon)).point();
 		break;
 		case Line::SEGMENT:
 			a = line.startPoint();
@@ -69,8 +82,9 @@ Line VoronoiEdge::getRenderLine(const Rectangle& boundingBox)
 	return Line::segment(a, b);
 }
 
-Line VoronoiEdge::getIntersectedBorderLine(const Point& direction, const Rectangle& boundingBox)
+Line VoronoiEdge::getIntersectedBorderLine(const Point& direction, const Polygon& boundingPolygon)
 {
+	/*
 	if (direction.x()<0) { //left
 		return Line::forDirection(Point(boundingBox.left(),0), Point(0,1));
 	} else if (direction.y()<0) { //top
@@ -80,4 +94,7 @@ Line VoronoiEdge::getIntersectedBorderLine(const Point& direction, const Rectang
 	} else { //right
 		return Line::forDirection(Point(boundingBox.right(),0), Point(0,1));
 	}
+	*/
+	
+	return Line();
 }

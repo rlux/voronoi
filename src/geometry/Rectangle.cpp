@@ -81,3 +81,23 @@ real Rectangle::bottom() const
 {
 	return _top + _height;
 }
+
+Point Rectangle::topLeft() const
+{
+	return Point(top(), left());
+}
+
+Point Rectangle::topRight() const
+{
+	return Point(top(), right());
+}
+
+Point Rectangle::bottomLeft() const
+{
+	return Point(bottom(), left());
+}
+
+Point Rectangle::bottomRight() const
+{
+	return Point(bottom(), right());
+}

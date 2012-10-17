@@ -24,35 +24,56 @@
   * along with Voronoi++.  If not, see <http://www.gnu.org/licenses/>.
   **/
 
-#pragma once
-
-#include <geometry/Point.h>
-#include <geometry/Line.h>
-#include <geometry/Rectangle.h>
 #include <geometry/Polygon.h>
 
-#include <VoronoiSite.h>
+using namespace geometry;
 
-namespace voronoi {
-
-class VoronoiEdge
+Polygon::Polygon()
 {
-public:
-	VoronoiEdge(VoronoiSite* left, VoronoiSite* right);
+}
 
-	void addPoint(const geometry::Point& point);
-	void adjustOrientation(const geometry::Point& awayPoint);
+Polygon::Polygon(std::vector<Point> points) : _points(points)
+{
+}
 
-	geometry::Line getRenderLine(const geometry::Rectangle& boundingBox);
-	geometry::Line getRenderLine(const geometry::Polygon& boundingPolygon);
-protected:
-	VoronoiSite* left;
-	VoronoiSite* right;
+const std::vector<Point>& Polygon::points() const
+{
+	return _points;
+}
 
-	geometry::Line line;
-private:
-	geometry::Line getIntersectedBorderLine(const geometry::Point& direction, const geometry::Polygon& boundingPolygon);
-};
+const std::vector<Line>& Polygon::edges() const
+{
+	return _edges;
+}
 
-} //end namespace voronoi
+bool Polygon::contains(const Point& p) const
+{
+	if (_edges.size() < 3) {
+		return false;
+	}
+	
+	for (unsigned i=0; i < _edges.size(); ++i) {
+		Line& line = _edges[i]; // edge from points[i] to points[i+1]
+		
+		if (!line.sameSide(p, _points[(i+2)%_points.size())) {
+			return false;
+		}
+	}
+	
+	return true;
+}
 
+Polygon& Polygon::operator<<(const Point& point)
+{
+	_points.push_back(point);
+	
+	if (_points.size() > 1) {
+		if (_edges.size() > 0) {
+			_edges.back().setEndPoint(point);
+		}
+		
+		_edges.push_back(Line::segment(point, _points.front()));
+	}
+	
+	return *this;
+}
