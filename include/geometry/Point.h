@@ -42,7 +42,6 @@ public:
 	real y() const;
 	void setX(real x);
 	void setY(real y);
-	bool isValid() const;
 	
 	bool operator==(const Point& p) const;
 	Point operator-() const;
@@ -64,7 +63,6 @@ public:
 private:
 	real _x;
 	real _y;
-	bool valid;
 };
 
 Point operator*(real factor, const Point& p);

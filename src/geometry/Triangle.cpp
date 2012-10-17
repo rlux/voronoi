@@ -29,6 +29,10 @@
 
 using namespace geometry;
 
+Triangle::Triangle()
+{
+}
+
 Triangle::Triangle(const Point& a, const Point& b, const Point& c) : a(a), b(b), c(c)
 {
 }
@@ -40,9 +44,9 @@ Circle Triangle::circumcircle() const
 	
 	if (ab.x()*bc.y()-ab.y()*bc.x()==0) return Circle(); // all points on a line
 	
-	Point center = Line::forNormal((a+b)/2, ab).intersection(Line::forNormal((b+c)/2,bc));
-	real r = 0;
-	if (center.isValid()) r = (center-a).length();
+	bool intersects = false;
+	Point center = Line::forNormal((a+b)/2, ab).intersection(Line::forNormal((b+c)/2,bc), intersects);
+	real r = intersects ? (center-a).length() : 0;
 	
 	return Circle(center, r);
 }

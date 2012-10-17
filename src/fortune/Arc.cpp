@@ -32,7 +32,7 @@ using namespace voronoi;
 using namespace voronoi::fortune;
 using namespace geometry;
 
-Arc::Arc(VoronoiSite* site, VoronoiEdge* leftEdge) : site(site), leftEdge(leftEdge)
+Arc::Arc(VoronoiSite* site, VoronoiEdge* leftEdge) : _site(site), leftEdge(leftEdge)
 {
 	prev = next = 0;
 	event = 0;
@@ -42,7 +42,50 @@ Arc::~Arc()
 {
 }
 
-Point Arc::intersection(const Point& focus1, const Point& focus2, real baselineY, bool left)
+void Arc::insert(Arc* arc)
+{
+	connect(arc, next);
+	connect(this, arc);
+}
+
+void Arc::splitWith(Arc* arc)
+{
+	Arc* duplicate = new Arc(_site, arc->leftEdge);
+	
+	insert(duplicate);
+	insert(arc);
+}
+
+VoronoiSite* Arc::site() const
+{
+	return _site;
+}
+
+bool Arc::getTriangle(Triangle& triangle) const
+{
+	if (!prev || !next || prev->_site == next->_site) return false;
+	
+	triangle = Triangle(prev->_site->position(), next->_site->position(), _site->position());
+	
+	return true;
+}
+
+void Arc::invalidateEvent()
+{
+	if (!event) return;
+	event->invalidate();
+	event = 0;
+}
+
+VoronoiEdge* Arc::rightEdge()
+{
+	if (!next) return 0;
+	return next->leftEdge;
+}
+
+
+
+Point Arc::intersection(const Point& focus1, const Point& focus2, real baselineY, bool left, bool& intersects)
 {	
 	// parabola formula: (x-h)^2 = 4a(y-k) with vertex=(h,k) and a=dist(line, vertex)/2
 	real h1 = focus1.x();
@@ -56,8 +99,12 @@ Point Arc::intersection(const Point& focus1, const Point& focus2, real baselineY
 	real x,y;
 
 	if (a1==0 && a2==0) { // no intersection
+		intersects = false;
 		return Point();		
-	} else if (a1==a2) { // optimization
+	}
+	intersects = true;
+	
+	if (a1==a2) { // optimization
 		x = (h1+h2)/2;
 	} else if (a1==0) { // first parabola lies on baseline -> degenerates to line
 		x = h1;
@@ -79,33 +126,6 @@ Point Arc::intersection(const Point& focus1, const Point& focus2, real baselineY
 	y = (x-h1)*(x-h1)/(4*a1)+k1;
 	
 	return Point(x,y);
-}
-
-void Arc::insert(Arc* arc)
-{
-	connect(arc, next);
-	connect(this, arc);
-}
-
-void Arc::splitWith(Arc* arc)
-{
-	Arc* duplicate = new Arc(site, arc->leftEdge);
-	
-	insert(duplicate);
-	insert(arc);
-}
-
-void Arc::invalidateEvent()
-{
-	if (!event) return;
-	event->invalidate();
-	event = 0;
-}
-
-VoronoiEdge* Arc::rightEdge()
-{
-	if (!next) return 0;
-	return next->leftEdge;
 }
 
 void Arc::connect(Arc* arc1, Arc* arc2)

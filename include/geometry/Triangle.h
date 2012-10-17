@@ -34,6 +34,7 @@ namespace geometry {
 class Triangle
 {
 public:
+	Triangle();
 	Triangle(const Point& a, const Point& b, const Point& c);
 
 	Circle circumcircle() const;

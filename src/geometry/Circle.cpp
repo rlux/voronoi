@@ -51,7 +51,3 @@ bool Circle::contains(const Point& p) const
 	return (_center-p).squaredLength()<=_radius*_radius;
 }
 
-bool Circle::isValid() const
-{
-	return _center.isValid() && _radius>=0;
-}

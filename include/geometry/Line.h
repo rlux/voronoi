@@ -59,7 +59,7 @@ public:
 	void invertDirection();
 	bool addPoint(const Point& point);
 
-	Point intersection(const Line& line) const;
+	Point intersection(const Line& line, bool& intersects) const;
 	Point normal() const;
 	Point toPoint(const Point& point) const; //TODO: rename (to let fall a perpendicular?)
 	//

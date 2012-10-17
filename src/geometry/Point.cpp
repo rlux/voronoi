@@ -34,11 +34,11 @@ Point geometry::operator*(real factor, const Point& p) {
 	return p * factor;
 }
 
-Point::Point() : _x(0), _y(0), valid(false)
+Point::Point() : _x(0), _y(0)
 {
 }
 
-Point::Point(real x, real y) : _x(x), _y(y), valid(true)
+Point::Point(real x, real y) : _x(x), _y(y)
 {
 }
 
@@ -118,10 +118,6 @@ real Point::x() const {
 
 real Point::y() const {
 	return _y;
-}
-
-bool Point::isValid() const {
-	return valid;
 }
 
 size_t PointHasher::operator()(const Point& p) const

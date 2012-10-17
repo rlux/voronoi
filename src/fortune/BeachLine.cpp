@@ -52,14 +52,15 @@ Arc* BeachLine::arcFor(const Point& p) const
 {
 	for (Arc* arc=firstElement; arc; arc=arc->next) {
 		if (!arc->next) {
-			if (arc->site->position().y()==p.y()) return 0;
+			if (arc->site()->position().y()==p.y()) return 0;
 			return arc;
 		}
 		
-		bool left = arc->site->position().y()>arc->next->site->position().y();
+		bool left = arc->site()->position().y()>arc->next->site()->position().y();
 
-		Point intersection = Arc::intersection(arc->site->position(), arc->next->site->position(), p.y(), left);
-		if (!intersection.isValid()) continue;
+		bool intersects;
+		Point intersection = Arc::intersection(arc->site()->position(), arc->next->site()->position(), p.y(), left, intersects);
+		if (!intersects) continue;
 
 		if (p.x()<=intersection.x()) {
 			return arc;
