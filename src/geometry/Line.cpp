@@ -104,19 +104,19 @@ bool Line::addPoint(const Point& point)
 	}
 }
 
-Point Line::intersection(const Line& line, bool& intersects) const
+LinearSolutionSet Line::intersection(const Line& line) const
 {
 	Point u = _direction;
 	Point v = line._direction;
 	Point w = _startPoint-line._startPoint;
 	real denominator = v.x()*u.y()-v.y()*u.x();
 	if (denominator==0) {
-		intersects = false;
-		return Point();
+		//check for infinite solutions: w parallel to u
+		//extract vector class, parallelTo()
+		return LinearSolutionSet::noSolution();
 	}
 	real s = (v.y()*w.x()-v.x()*w.y())/denominator;
-	intersects = true;
-	return _startPoint+s*_direction;
+	return LinearSolutionSet(_startPoint+s*_direction);
 }
 
 Point Line::normal() const
@@ -126,11 +126,57 @@ Point Line::normal() const
 
 Point Line::toPoint(const Point& point) const
 {
-	bool intersects;
-	return point-intersection(Line::forDirection(point, normal()), intersects);
+	return point-intersection(Line::forDirection(point, normal())).point();
 }
 
 bool Line::sameSide(const Point& p1, const Point& p2) const
 {
 	return toPoint(p1).dotProduct(toPoint(p2))>=0;
 }
+
+
+LinearSolutionSet::LinearSolutionSet() : _type(NO_SOLUTION)
+{
+}
+
+LinearSolutionSet::LinearSolutionSet(const Point& point) : _point(point), _type(ONE_SOLUTION)
+{
+}
+
+LinearSolutionSet LinearSolutionSet::noSolution()
+{
+	return LinearSolutionSet();
+}
+
+LinearSolutionSet LinearSolutionSet::infiniteSolutions()
+{
+	LinearSolutionSet solutionSet;
+	solutionSet._type = INFINITE_SOLUTIONS;
+	return solutionSet;
+}
+
+bool LinearSolutionSet::isEmpty() const
+{
+	return _type==NO_SOLUTION;
+}
+
+bool LinearSolutionSet::isOne() const
+{
+	return _type==ONE_SOLUTION;
+}
+
+bool LinearSolutionSet::isInfinite() const
+{
+	return _type==INFINITE_SOLUTIONS;
+}
+
+const LinearSolutionSet::Type& LinearSolutionSet::type() const
+{
+	return _type;
+}
+
+const Point& LinearSolutionSet::point() const
+{
+	return _point;
+}
+

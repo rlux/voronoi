@@ -50,17 +50,15 @@ Line VoronoiEdge::getRenderLine(const Rectangle& boundingBox)
 {
 	Point a;
 	Point b;
-
-	bool intersects = false;
 	
 	switch (line.type()) {
 		case Line::LINE:
-			a = line.intersection(getIntersectedBorderLine(-line.direction(), boundingBox), intersects);
-			b = line.intersection(getIntersectedBorderLine(line.direction(), boundingBox), intersects);
+			a = line.intersection(getIntersectedBorderLine(-line.direction(), boundingBox)).point();
+			b = line.intersection(getIntersectedBorderLine(line.direction(), boundingBox)).point();
 		break;
 		case Line::RAY:
 			a = line.startPoint();
-			b = line.intersection(getIntersectedBorderLine(line.direction(), boundingBox), intersects);
+			b = line.intersection(getIntersectedBorderLine(line.direction(), boundingBox)).point();
 		break;
 		case Line::SEGMENT:
 			a = line.startPoint();

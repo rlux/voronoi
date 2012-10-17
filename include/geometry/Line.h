@@ -29,6 +29,8 @@
 #include <geometry/Point.h>
 
 namespace geometry {
+	
+class LinearSolutionSet;
 
 class Line
 {
@@ -56,7 +58,7 @@ public:
 	void invertDirection();
 	bool addPoint(const Point& point);
 
-	Point intersection(const Line& line, bool& intersects) const;
+	LinearSolutionSet intersection(const Line& line) const;
 	Point normal() const;
 	Point toPoint(const Point& point) const; //TODO: rename (to let fall a perpendicular?)
 	//
@@ -66,6 +68,32 @@ protected:
 	Point _direction;
 	
 	Type _type;
+};
+
+class LinearSolutionSet
+{
+public:
+	enum Type {
+		NO_SOLUTION,
+		ONE_SOLUTION,
+		INFINITE_SOLUTIONS
+	};
+	
+	LinearSolutionSet();
+	LinearSolutionSet(const Point& point);
+	
+	static LinearSolutionSet noSolution();
+	static LinearSolutionSet infiniteSolutions();
+	
+	bool isEmpty() const;
+	bool isOne() const;
+	bool isInfinite() const;
+	
+	const Type& type() const;
+	const Point& point() const;
+private:
+	Type _type;
+	Point _point;
 };
 
 
