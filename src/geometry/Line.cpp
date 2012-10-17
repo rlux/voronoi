@@ -32,34 +32,31 @@ Line::Line() : _type(NULL_LINE)
 {
 }
 
+Line::Line(Type type, const Point& start, const Point& end, const Point& direction) : _type(type), _startPoint(start), _endPoint(end), _direction(direction)
+{	
+}
+
 Line Line::segment(const Point& point1, const Point& point2) {
-	Line line;
-	line._startPoint = point1;
-	line._direction = point2-point1;
-	line._type = SEGMENT;
-	return line;
+	return Line(SEGMENT, point1, point2, point2-point1);
 }
 
 Line Line::ray(const Point& supportVector, const Point& direction) {
-	Line line;
-	line._startPoint = supportVector;
-	line._direction = direction;
-	line._type = RAY;
-	return line;
+	return Line(RAY, supportVector, supportVector+direction, direction);
 }
 
 Line Line::forDirection(const Point& supportVector, const Point& direction)
 {
-	Line line;
-	line._startPoint = supportVector;
-	line._direction = direction;
-	line._type = LINE;
-	return line;
+	return Line(LINE, supportVector, supportVector+direction, direction);
 }
 
 Line Line::forNormal(const Point& supportVector, const Point& normal)
 {
 	return Line::forDirection(supportVector, normal.perpendicular());
+}
+
+Point Line::supportVector() const
+{
+	return _startPoint;
 }
 
 Point Line::startPoint() const
@@ -74,8 +71,7 @@ Point Line::direction() const
 
 Point Line::endPoint() const
 {
-	if (_type==RAY) return Point();
-	return _startPoint+_direction;
+	return _endPoint;
 }
 
 Line::Type Line::type() const
@@ -86,11 +82,44 @@ Line::Type Line::type() const
 void Line::setStartPoint(const Point& point)
 {
 	_startPoint = point;
+	_direction = _endPoint-_startPoint;
 }
 
 void Line::setEndPoint(const Point& point)
 {
-	_direction = point - _startPoint;
+	_endPoint = point;
+	_direction = point-_startPoint;
+}
+
+void Line::setDirection(const Point& direction)
+{
+	_direction = direction;
+	_endPoint = _startPoint+_direction;
+}
+
+bool Line::isNull() const
+{
+	return _type==NULL_LINE;
+}
+
+bool Line::isLine() const
+{
+	return _type==LINE;
+}
+
+bool Line::isRay() const
+{
+	return _type==RAY;
+}
+
+bool Line::isSegment() const
+{
+	return _type==SEGMENT;
+}
+
+Line Line::asLine() const
+{
+	return Line::forDirection(_startPoint, _direction);
 }
 
 void Line::invertDirection()
@@ -106,7 +135,8 @@ bool Line::addPoint(const Point& point)
 			_type = RAY;
 			return true;
 		case RAY:
-			_direction = point - _startPoint;
+			_endPoint = point;
+			_direction = _endPoint-_startPoint;
 			_type = SEGMENT;
 			return true;
 		default:

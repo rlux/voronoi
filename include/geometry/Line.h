@@ -50,13 +50,22 @@ public:
 	static Line ray(const Point& supportVector, const Point& direction);
 	static Line segment(const Point& point1, const Point& point2);
 	
+	Point supportVector() const;
 	Point startPoint() const;
 	Point direction() const;
 	Point endPoint() const;
 	Type type() const;
 	
+	bool isNull() const;
+	bool isLine() const;
+	bool isRay() const;
+	bool isSegment() const;
+	
+	Line asLine() const;
+	
 	void setStartPoint(const Point& point);
 	void setEndPoint(const Point& point);
+	void setDirection(const Point& direction);
 	
 	void invertDirection();
 	bool addPoint(const Point& point);
@@ -64,13 +73,15 @@ public:
 	LinearSolutionSet intersection(const Line& line) const;
 	Point normal() const;
 	Point toPoint(const Point& point) const; //TODO: rename (to let fall a perpendicular?)
-	//
+	
 	bool sameSide(const Point& p1, const Point& p2) const;
 protected:
 	Point _startPoint;
 	Point _direction;
-	
+	Point _endPoint;	
 	Type _type;
+
+	Line(Type type, const Point& start, const Point& end, const Point& direction);
 };
 
 class LinearSolutionSet
