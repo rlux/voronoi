@@ -14,7 +14,7 @@ set(sources
 	src/geometry/Circle.cpp
 	src/geometry/Triangle.cpp
 	src/geometry/Rectangle.cpp
-	src/geometry/Polygon.cpp
+	src/geometry/ConvexPolygon.cpp
 	
 	src/VoronoiCell.cpp
 	src/VoronoiDiagram.cpp

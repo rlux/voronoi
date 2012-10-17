@@ -44,6 +44,12 @@ public:
 	void setY(real y);
 	
 	bool operator==(const Point& p) const;
+	bool operator!=(const Point& p) const;
+	bool operator<(const Point& p) const;
+	bool operator<=(const Point& p) const;
+	bool operator>(const Point& p) const;
+	bool operator>=(const Point& p) const;
+
 	Point operator-() const;
 	Point& operator+=(const Point& p);
 	Point& operator-=(const Point& p);
@@ -66,11 +72,5 @@ private:
 };
 
 Point operator*(real factor, const Point& p);
-
-class PointHasher
-{
-public:
-	size_t operator()(const geometry::Point& p) const;
-};
 
 } //end namespace geometry

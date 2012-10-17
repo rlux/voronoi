@@ -29,23 +29,38 @@
 #include <geometry/Point.h>
 #include <geometry/Line.h>
 #include <vector>
+#include <set>
 
 namespace geometry {
 
-class Polygon
+class PolygonIntersectionSolutionSet;
+
+class ConvexPolygon
 {
 public:
-	Polygon();
-	Polygon(std::vector<Point> points);
+	ConvexPolygon();
+	ConvexPolygon(std::vector<Point> points);
 
 	const std::vector<Point>& points() const;
 	const std::vector<Line>& edges() const;
 	bool contains(const Point& p) const;
+	const PolygonIntersectionSolutionSet intersection(const Line& line) const;
+	bool violatesConvexity(const Point& point) const;
 	
-	Polygon& operator<<(const Point& point);
+	ConvexPolygon& operator<<(const Point& point);
 protected:
 	std::vector<Point> _points;
 	std::vector<Line> _edges;
+};
+
+class PolygonIntersectionSolutionSet
+{
+public:
+	const std::vector<Point> points() const;
+	unsigned size() const;
+	void addPoint(const Point& point);
+protected:
+	std::set<Point> _points;
 };
 
 } //end namespace geometry

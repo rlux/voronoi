@@ -42,11 +42,6 @@ Point::Point(real x, real y) : _x(x), _y(y)
 {
 }
 
-bool Point::operator==(const Point& p) const
-{
-	return _x == p._x && _y == p._y;
-}
-
 Point Point::operator-() const {
 	return Point(-_x, -_y);
 }
@@ -95,6 +90,36 @@ Point Point::operator/(real factor) const {
 	return Point(_x / factor, _y / factor);
 }
 
+bool Point::operator==(const Point& p) const
+{
+	return _x == p._x && _y == p._y;
+}
+
+bool Point::operator!=(const Point& p) const
+{
+	return _x != p._x || _y != p._y;
+}
+
+bool Point::operator<(const Point& p) const
+{
+	return _x < p._x || _y < p._y;
+}
+
+bool Point::operator<=(const Point& p) const
+{
+	return _x <= p._x || _y <= p._y;
+}
+
+bool Point::operator>(const Point& p) const
+{
+	return _x > p._x || _y > p._y;
+}
+
+bool Point::operator>=(const Point& p) const
+{
+	return _x >= p._x || _y >= p._y;
+}
+
 real Point::dotProduct(const Point& p) const {
 	return _x * p._x + _y * p._y;
 }
@@ -118,13 +143,4 @@ real Point::x() const {
 
 real Point::y() const {
 	return _y;
-}
-
-size_t PointHasher::operator()(const Point& p) const
-{
-	/*std::hash<real> hashFunction;
-	
-	return hashFunction(p.x()) ^ hashFunction(p.y());
-	*/
-	return 0;
 }

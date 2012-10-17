@@ -44,7 +44,7 @@ Circle Triangle::circumcircle() const
 	
 	if (ab.x()*bc.y()-ab.y()*bc.x()==0) return Circle(); // all points on a line
 	
-	LinearSolutionSet solutionSet = Line::forNormal((a+b)/2, ab).intersection(Line::forNormal((b+c)/2,bc));
+	LineIntersectionSolutionSet solutionSet = Line::forNormal((a+b)/2, ab).intersection(Line::forNormal((b+c)/2,bc));
 	if (!solutionSet.isOne()) {
 		return Circle();
 	}

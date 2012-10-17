@@ -83,19 +83,19 @@ Line::Type Line::type() const
 void Line::setStartPoint(const Point& point)
 {
 	_startPoint = point;
-	_direction = _endPoint-_startPoint;
+	_direction = _endPoint - _startPoint;
 }
 
 void Line::setEndPoint(const Point& point)
 {
 	_endPoint = point;
-	_direction = point-_startPoint;
+	_direction = _endPoint - _startPoint;
 }
 
 void Line::setDirection(const Point& direction)
 {
 	_direction = direction;
-	_endPoint = _startPoint+_direction;
+	_endPoint = _startPoint + _direction;
 }
 
 bool Line::isNull() const
@@ -150,37 +150,33 @@ bool Line::addPoint(const Point& point)
 	}
 }
 
-LinearSolutionSet Line::intersection(const Line& line) const
+const LineIntersectionSolutionSet Line::intersection(const Line& line) const
 {
 	real s;
-	if (!intersectionCoefficient(line, s)) {
+	real t;
+	if (!intersectionCoefficient(line, s) || !line.intersectionCoefficient(*this, t)) {
 		//check for infinite solutions: w parallel to u
 		//extract vector class, parallelTo()
-		return LinearSolutionSet::noSolution();
+		return LineIntersectionSolutionSet::noSolution();
 	}
 	
-	if (!containsCoefficient(s)) {
-		return LinearSolutionSet::noSolution();
-	}
-	real t;
-	line.intersectionCoefficient(*this, t);
-	if (!line.containsCoefficient(t)) {
-		return LinearSolutionSet::noSolution();
+	if (!containsCoefficient(s) || !line.containsCoefficient(t)) {
+		return LineIntersectionSolutionSet::noSolution();
 	}
 	
-	return LinearSolutionSet(_startPoint+s*_direction);
+	return LineIntersectionSolutionSet(_startPoint+s*_direction);
 }
 
-LinearSolutionSet Line::lineIntersection(const Line& line) const
+LineIntersectionSolutionSet Line::lineIntersection(const Line& line) const
 {
 	real s;
 	if (!intersectionCoefficient(line, s)) {
 		//check for infinite solutions: w parallel to u
 		//extract vector class, parallelTo()
-		return LinearSolutionSet::noSolution();
+		return LineIntersectionSolutionSet::noSolution();
 	}
 	
-	return LinearSolutionSet(_startPoint+s*_direction);
+	return LineIntersectionSolutionSet(_startPoint+s*_direction);
 }
 
 bool Line::intersectionCoefficient(const Line& line, real& coefficient) const
@@ -205,7 +201,6 @@ bool Line::containsCoefficient(real coefficient) const
 			return coefficient>=0;
 		case SEGMENT:
 			return coefficient>=0 && coefficient<=1;
-		break;
 		default:
 			return false;
 	}
@@ -223,51 +218,51 @@ Point Line::toPoint(const Point& point) const
 
 bool Line::sameSide(const Point& p1, const Point& p2) const
 {
-	return toPoint(p1).dotProduct(toPoint(p2))>=0;
+	return toPoint(p1).dotProduct(toPoint(p2))>0;
 }
 
 
-LinearSolutionSet::LinearSolutionSet() : _type(NO_SOLUTION)
+LineIntersectionSolutionSet::LineIntersectionSolutionSet() : _type(NO_SOLUTION)
 {
 }
 
-LinearSolutionSet::LinearSolutionSet(const Point& point) : _point(point), _type(ONE_SOLUTION)
+LineIntersectionSolutionSet::LineIntersectionSolutionSet(const Point& point) : _point(point), _type(ONE_SOLUTION)
 {
 }
 
-LinearSolutionSet LinearSolutionSet::noSolution()
+LineIntersectionSolutionSet LineIntersectionSolutionSet::noSolution()
 {
-	return LinearSolutionSet();
+	return LineIntersectionSolutionSet();
 }
 
-LinearSolutionSet LinearSolutionSet::infiniteSolutions()
+LineIntersectionSolutionSet LineIntersectionSolutionSet::infiniteSolutions()
 {
-	LinearSolutionSet solutionSet;
+	LineIntersectionSolutionSet solutionSet;
 	solutionSet._type = INFINITE_SOLUTIONS;
 	return solutionSet;
 }
 
-bool LinearSolutionSet::isEmpty() const
+bool LineIntersectionSolutionSet::isEmpty() const
 {
 	return _type==NO_SOLUTION;
 }
 
-bool LinearSolutionSet::isOne() const
+bool LineIntersectionSolutionSet::isOne() const
 {
 	return _type==ONE_SOLUTION;
 }
 
-bool LinearSolutionSet::isInfinite() const
+bool LineIntersectionSolutionSet::isInfinite() const
 {
 	return _type==INFINITE_SOLUTIONS;
 }
 
-const LinearSolutionSet::Type& LinearSolutionSet::type() const
+const LineIntersectionSolutionSet::Type& LineIntersectionSolutionSet::type() const
 {
 	return _type;
 }
 
-const Point& LinearSolutionSet::point() const
+const Point& LineIntersectionSolutionSet::point() const
 {
 	return _point;
 }

@@ -42,8 +42,8 @@ void MainWindow::recacheVoronoiDiagram()
 	//painter.setRenderHint(QPainter::Antialiasing);
 	painter.setPen(Qt::black);
 	
-	geometry::Polygon boundingBox;
-	boundingBox << geometry::Point(0, 0) << geometry::Point(0, 1280) << geometry::Point(1280, 720) << geometry::Point(0, 720);
+	geometry::ConvexPolygon boundingBox;
+	boundingBox << geometry::Point(1280 / 3, 0) << geometry::Point(2 * 1280 / 3, 0) << geometry::Point(1280, 720 / 2) << geometry::Point(2 * 1280 / 3, 720) << geometry::Point(1280 / 3, 720) << geometry::Point(0, 2 * 720 / 3) << geometry::Point(0, 720 / 3);
 	
 	for (std::map<VoronoiSite*, VoronoiCell*>::iterator it = diagram.cells().begin(); it != diagram.cells().end(); ++it) {
 		std::pair<VoronoiSite*, VoronoiCell*> pair = *it;
@@ -62,12 +62,17 @@ void MainWindow::recacheVoronoiDiagram()
 	}
 	
 	painter.setPen(Qt::red);
-	painter.drawRect(
-		offset.x()+0,
-		offset.y()+0,
-		1280,
-		720
-	);
+	
+	for (std::vector<geometry::Line>::const_iterator it = boundingBox.edges().begin(); it != boundingBox.edges().end(); ++it) {
+		const geometry::Line& line = *it;
+		
+		painter.drawLine(
+			offset.x()+line.startPoint().x(),
+			offset.y()+line.startPoint().y(),
+			offset.x()+line.endPoint().x(),
+			offset.y()+line.endPoint().y()
+		);
+	}
 }
 
 void MainWindow::paintEvent(QPaintEvent* event)

@@ -30,7 +30,7 @@
 
 namespace geometry {
 	
-class LinearSolutionSet;
+class LineIntersectionSolutionSet;
 
 class Line
 {
@@ -70,7 +70,7 @@ public:
 	void invertDirection();
 	bool addPoint(const Point& point);
 
-	LinearSolutionSet intersection(const Line& line) const;
+	const LineIntersectionSolutionSet intersection(const Line& line) const;
 	Point normal() const;
 	Point toPoint(const Point& point) const; //TODO: rename (to let fall a perpendicular?)
 	
@@ -84,11 +84,11 @@ protected:
 	Line(Type type, const Point& start, const Point& end, const Point& direction);
 
 	bool intersectionCoefficient(const Line& line, real& coefficient) const;
-	LinearSolutionSet lineIntersection(const Line& line) const;
+	LineIntersectionSolutionSet lineIntersection(const Line& line) const;
 	bool containsCoefficient(real coefficient) const;
 };
 
-class LinearSolutionSet
+class LineIntersectionSolutionSet
 {
 public:
 	enum Type {
@@ -97,11 +97,11 @@ public:
 		INFINITE_SOLUTIONS
 	};
 	
-	LinearSolutionSet();
-	LinearSolutionSet(const Point& point);
+	LineIntersectionSolutionSet();
+	LineIntersectionSolutionSet(const Point& point);
 	
-	static LinearSolutionSet noSolution();
-	static LinearSolutionSet infiniteSolutions();
+	static LineIntersectionSolutionSet noSolution();
+	static LineIntersectionSolutionSet infiniteSolutions();
 	
 	bool isEmpty() const;
 	bool isOne() const;

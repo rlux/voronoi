@@ -29,7 +29,7 @@
 #include <geometry/Point.h>
 #include <geometry/Line.h>
 #include <geometry/Rectangle.h>
-#include <geometry/Polygon.h>
+#include <geometry/ConvexPolygon.h>
 
 #include <VoronoiSite.h>
 
@@ -43,15 +43,13 @@ public:
 	void addPoint(const geometry::Point& point);
 	void adjustOrientation(const geometry::Point& awayPoint);
 
-	geometry::Line getRenderLine(const geometry::Rectangle& boundingBox);
-	geometry::Line getRenderLine(const geometry::Polygon& boundingPolygon);
+	geometry::Line getRenderLine(const geometry::Rectangle& boundingBox) const;
+	geometry::Line getRenderLine(const geometry::ConvexPolygon& boundingPolygon) const;
 protected:
 	VoronoiSite* left;
 	VoronoiSite* right;
 
 	geometry::Line line;
-private:
-	geometry::Line getIntersectedBorderLine(const geometry::Point& direction, const geometry::Polygon& boundingPolygon);
 };
 
 } //end namespace voronoi

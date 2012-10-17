@@ -46,9 +46,9 @@ void VoronoiEdge::adjustOrientation(const Point& awayPoint)
 	}
 }
 
-Line VoronoiEdge::getRenderLine(const Rectangle& boundingBox)
+Line VoronoiEdge::getRenderLine(const Rectangle& boundingBox) const
 {
-	Polygon boundingPolygon;
+	ConvexPolygon boundingPolygon;
 	
 	boundingPolygon
 		<< boundingBox.topLeft()
@@ -59,42 +59,26 @@ Line VoronoiEdge::getRenderLine(const Rectangle& boundingBox)
 	return getRenderLine(boundingPolygon);
 }
 
-Line VoronoiEdge::getRenderLine(const Polygon& boundingPolygon)
+Line VoronoiEdge::getRenderLine(const ConvexPolygon& boundingPolygon) const
 {
-	Point a;
-	Point b;
-	
-	switch (line.type()) {
-		case Line::LINE:
-			a = line.intersection(getIntersectedBorderLine(-line.direction(), boundingPolygon)).point();
-			b = line.intersection(getIntersectedBorderLine(line.direction(), boundingPolygon)).point();
-		break;
-		case Line::RAY:
-			a = line.startPoint();
-			b = line.intersection(getIntersectedBorderLine(line.direction(), boundingPolygon)).point();
-		break;
-		case Line::SEGMENT:
-			a = line.startPoint();
-			b = line.endPoint();
-		break;
+	if (line.isSegment() && boundingPolygon.contains(line.startPoint()) && boundingPolygon.contains(line.endPoint())) {
+		return line;
 	}
 	
-	return Line::segment(a, b);
-}
-
-Line VoronoiEdge::getIntersectedBorderLine(const Point& direction, const Polygon& boundingPolygon)
-{
-	/*
-	if (direction.x()<0) { //left
-		return Line::forDirection(Point(boundingBox.left(),0), Point(0,1));
-	} else if (direction.y()<0) { //top
-		return Line::forDirection(Point(0,boundingBox.top()), Point(1,0));
-	} else if (direction.x()==0) { //bottom
-		return Line::forDirection(Point(0,boundingBox.bottom()), Point(1,0));
-	} else { //right
-		return Line::forDirection(Point(boundingBox.right(),0), Point(0,1));
-	}
-	*/
+	const PolygonIntersectionSolutionSet solutionSet = boundingPolygon.intersection(line);
 	
-	return Line();
+	switch (solutionSet.size()) {
+		case 0:
+			return Line();
+		case 1:
+			if (boundingPolygon.contains(line.startPoint())) {
+				return Line::segment(line.startPoint(), solutionSet.points().front());
+			} else {
+				return Line::segment(solutionSet.points().front(), line.endPoint());
+			}
+		default:
+			const std::vector<Point> points = solutionSet.points();
+			
+			return Line::segment(points.front(), points.back());
+	}
 }

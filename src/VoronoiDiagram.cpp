@@ -112,7 +112,7 @@ VoronoiEdge* VoronoiDiagram::createEdge(VoronoiSite* left, VoronoiSite* right)
 
 bool compareSites(VoronoiSite* site1, VoronoiSite* site2)
 {
-	return site1->position().x() < site2->position().x() && site1->position().y() < site2->position().y();
+	return site1->position().x() < site2->position().x() &&  site1->position().y() < site2->position().y();
 }
 
 bool equalSites(VoronoiSite* site1, VoronoiSite* site2)
