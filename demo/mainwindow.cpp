@@ -2,10 +2,11 @@
 
 #include <QPainter>
 #include <QtGlobal>
+#include <cmath>
 
 using namespace voronoi;
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), dragging(false)
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), dragging(false), zoomLevel(0)
 {
 	qsrand(1000); // static number to initialize rng
 	
@@ -44,6 +45,7 @@ void MainWindow::recacheVoronoiDiagram()
 	
 	geometry::ConvexPolygon boundingBox;
 	boundingBox << geometry::Point(1280 / 3, 0) << geometry::Point(2 * 1280 / 3, 0) << geometry::Point(1280, 720 / 2) << geometry::Point(2 * 1280 / 3, 720) << geometry::Point(1280 / 3, 720) << geometry::Point(0, 2 * 720 / 3) << geometry::Point(0, 720 / 3);
+	float zf = zoomFactor();
 	
 	for (std::map<VoronoiSite*, VoronoiCell*>::iterator it = diagram.cells().begin(); it != diagram.cells().end(); ++it) {
 		std::pair<VoronoiSite*, VoronoiCell*> pair = *it;
@@ -53,10 +55,10 @@ void MainWindow::recacheVoronoiDiagram()
 			geometry::Line line = (*edgesIt)->getRenderLine(boundingBox);
 			
 			painter.drawLine(
-				offset.x()+line.startPoint().x(),
-				offset.y()+line.startPoint().y(),
-				offset.x()+line.endPoint().x(),
-				offset.y()+line.endPoint().y()
+				offset.x()+line.startPoint().x() * zf,
+				offset.y()+line.startPoint().y() * zf,
+				offset.x()+line.endPoint().x() * zf,
+				offset.y()+line.endPoint().y() * zf
 			);
 		}
 	}
@@ -67,10 +69,10 @@ void MainWindow::recacheVoronoiDiagram()
 		const geometry::Line& line = *it;
 		
 		painter.drawLine(
-			offset.x()+line.startPoint().x(),
-			offset.y()+line.startPoint().y(),
-			offset.x()+line.endPoint().x(),
-			offset.y()+line.endPoint().y()
+			offset.x()+line.startPoint().x() * zf,
+			offset.y()+line.startPoint().y() * zf,
+			offset.x()+line.endPoint().x() * zf,
+			offset.y()+line.endPoint().y() * zf
 		);
 	}
 }
@@ -112,6 +114,32 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event)
 	}
 }
 
+void MainWindow::wheelEvent(QWheelEvent* event)
+{
+	float oldZoomFactor = zoomFactor();
+	
+	if (event->delta() > 0) {
+		if (zoomLevel >= 10) {
+			return;
+		}
+		
+		zoomLevel++;
+		
+		
+	} else {
+		if (zoomLevel <= -10) {
+			return;
+		}
+		
+		zoomLevel--;
+	}
+	
+	offset = (offset - event->pos()) / oldZoomFactor * zoomFactor() + event->pos();
+	
+	recacheVoronoiDiagram();
+	update();
+}
+
 QList<QPoint> MainWindow::getSites()
 {
 	QList<QPoint> sites;
@@ -126,4 +154,9 @@ QList<QPoint> MainWindow::getSites()
 QSize MainWindow::sizeHint() const
 {
 	return QSize(1280, 720);
+}
+
+float MainWindow::zoomFactor()
+{
+	return pow(1.3, zoomLevel);
 }
