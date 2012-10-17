@@ -82,6 +82,10 @@ protected:
 	Type _type;
 
 	Line(Type type, const Point& start, const Point& end, const Point& direction);
+
+	bool intersectionCoefficient(const Line& line, real& coefficient) const;
+	LinearSolutionSet lineIntersection(const Line& line) const;
+	bool containsCoefficient(real coefficient) const;
 };
 
 class LinearSolutionSet

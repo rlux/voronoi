@@ -25,6 +25,7 @@
   **/
 
 #include <geometry/Line.h>
+#include <algorithm>
 
 using namespace geometry;
 
@@ -125,6 +126,11 @@ Line Line::asLine() const
 void Line::invertDirection()
 {
 	_direction *= -1;
+	if (isRay()) {
+		_endPoint = _startPoint+_direction;
+	} else {
+		std::swap(_startPoint, _endPoint);
+	}
 }
 
 bool Line::addPoint(const Point& point)
@@ -146,17 +152,63 @@ bool Line::addPoint(const Point& point)
 
 LinearSolutionSet Line::intersection(const Line& line) const
 {
+	real s;
+	if (!intersectionCoefficient(line, s)) {
+		//check for infinite solutions: w parallel to u
+		//extract vector class, parallelTo()
+		return LinearSolutionSet::noSolution();
+	}
+	
+	if (!containsCoefficient(s)) {
+		return LinearSolutionSet::noSolution();
+	}
+	real t;
+	line.intersectionCoefficient(*this, t);
+	if (!line.containsCoefficient(t)) {
+		return LinearSolutionSet::noSolution();
+	}
+	
+	return LinearSolutionSet(_startPoint+s*_direction);
+}
+
+LinearSolutionSet Line::lineIntersection(const Line& line) const
+{
+	real s;
+	if (!intersectionCoefficient(line, s)) {
+		//check for infinite solutions: w parallel to u
+		//extract vector class, parallelTo()
+		return LinearSolutionSet::noSolution();
+	}
+	
+	return LinearSolutionSet(_startPoint+s*_direction);
+}
+
+bool Line::intersectionCoefficient(const Line& line, real& coefficient) const
+{
 	Point u = _direction;
 	Point v = line._direction;
 	Point w = _startPoint-line._startPoint;
 	real denominator = v.x()*u.y()-v.y()*u.x();
 	if (denominator==0) {
-		//check for infinite solutions: w parallel to u
-		//extract vector class, parallelTo()
-		return LinearSolutionSet::noSolution();
+		return false;
 	}
-	real s = (v.y()*w.x()-v.x()*w.y())/denominator;
-	return LinearSolutionSet(_startPoint+s*_direction);
+	coefficient= (v.y()*w.x()-v.x()*w.y())/denominator;
+	return true;
+}
+
+bool Line::containsCoefficient(real coefficient) const
+{
+	switch (_type) {
+		case LINE:
+			return true;
+		case RAY:
+			return coefficient>=0;
+		case SEGMENT:
+			return coefficient>=0 && coefficient<=1;
+		break;
+		default:
+			return false;
+	}
 }
 
 Point Line::normal() const
@@ -166,7 +218,7 @@ Point Line::normal() const
 
 Point Line::toPoint(const Point& point) const
 {
-	return point-intersection(Line::forDirection(point, normal())).point();
+	return point-lineIntersection(Line::forDirection(point, normal())).point();
 }
 
 bool Line::sameSide(const Point& p1, const Point& p2) const
