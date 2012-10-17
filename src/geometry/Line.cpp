@@ -83,6 +83,16 @@ Line::Type Line::type() const
 	return _type;
 }
 
+void Line::setStartPoint(const Point& point)
+{
+	_startPoint = point;
+}
+
+void Line::setEndPoint(const Point& point)
+{
+	_direction = point - _startPoint;
+}
+
 void Line::invertDirection()
 {
 	_direction *= -1;
