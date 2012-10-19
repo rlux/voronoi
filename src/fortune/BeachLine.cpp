@@ -85,10 +85,13 @@ Arc* BeachLine::arcFor(const Point& p) const
 		}
 		
 		bool left = arc->site()->position().y()>arc->next()->site()->position().y();
+		
+		ParabolaIntersectionSolutionSet solutionSet = arc->parabola(p.y()).intersection(arc->next()->parabola(p.y()));
+		if (solutionSet.isEmpty() || solutionSet.isInfinite()) {
+			continue;
+		}
 
-		bool intersects;
-		Point intersection = Arc::intersection(arc->site()->position(), arc->next()->site()->position(), p.y(), left, intersects);
-		if (!intersects) continue;
+		Point intersection = left ? solutionSet.leftPoint() : solutionSet.rightPoint();
 
 		if (p.x()<=intersection.x()) {
 			return arc;

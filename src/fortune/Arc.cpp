@@ -27,7 +27,6 @@
 #include <fortune/Arc.h>
 #include <fortune/Event.h>
 #include <fortune/BeachLine.h>
-#include <cmath>
 
 using namespace voronoi;
 using namespace voronoi::fortune;
@@ -66,6 +65,11 @@ VoronoiEdge* Arc::rightEdge() const
 	return _next->_leftEdge;
 }
 
+Parabola Arc::parabola(real baselineY) const
+{
+	return Parabola(_site->position(), baselineY);
+}
+
 void Arc::setLeftEdge(VoronoiEdge* leftEdge)
 {
 	_leftEdge = leftEdge;
@@ -87,48 +91,5 @@ void Arc::resetEvent(CircleEvent* event)
 {
 	invalidateEvent();
 	_event = event;
-}
-
-Point Arc::intersection(const Point& focus1, const Point& focus2, real baselineY, bool left, bool& intersects)
-{	
-	// parabola formula: (x-h)^2 = 4a(y-k) with vertex=(h,k) and a=dist(line, vertex)/2
-	real h1 = focus1.x();
-	real a1 = (focus1.y()-baselineY)/2;
-	real k1 = focus1.y()-a1;
-	
-	real h2 = focus2.x();
-	real a2 = (focus2.y()-baselineY)/2;
-	real k2 = focus2.y()-a2;
-		
-	real x,y;
-
-	if (a1==0 && a2==0) { // no intersection
-		intersects = false;
-		return Point();		
-	}
-	intersects = true;
-	
-	if (a1==a2) { // optimization
-		x = (h1+h2)/2;
-	} else if (a1==0) { // first parabola lies on baseline -> degenerates to line
-		x = h1;
-		y = (x-h2)*(x-h2)/(4*a2)+k2;
-		return Point(x,y);
-	} else if (a2==0) { // second parabola lies on baseline -> degenerates to line
-		x = h2;
-	} else {
-		real p = 2*(h2*a1-h1*a2)/(a2-a1);
-		real q = (4*a1*a2*(k1-k2)+h1*h1*a2-h2*h2*a1)/(a2-a1);
-		real D = p*p/4-q;
-		
-		real sqrtD = sqrt(D);
-		
-		if (left) sqrtD = -sqrtD;
-		x = -p/2+sqrtD;
-	}
-	
-	y = (x-h1)*(x-h1)/(4*a1)+k1;
-	
-	return Point(x,y);
 }
 

@@ -14,6 +14,7 @@ set(sources
 	src/geometry/Line.cpp
 	src/geometry/Circle.cpp
 	src/geometry/Rectangle.cpp
+	src/geometry/Parabola.cpp
 	src/geometry/ConvexPolygon.cpp
 	
 	src/VoronoiCell.cpp

@@ -55,7 +55,7 @@ void Fortune::calculate()
 	}
 	
 	while (Event* event = nextEvent()) {
-		sweepPos = event->position().y();
+		sweepPos = event->position().y(); //TODO: move sweepPos to beachline?
 		if (event->isSiteEvent()) {
 			handleSiteEvent(event->asSiteEvent());
 		} else {

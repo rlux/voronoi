@@ -28,6 +28,7 @@
 
 #include <VoronoiSite.h>
 #include <VoronoiEdge.h>
+#include <geometry/Parabola.h>
 
 namespace voronoi {
 namespace fortune {
@@ -48,15 +49,14 @@ public:
 	VoronoiEdge* leftEdge() const;
 	VoronoiEdge* rightEdge() const;
 
+	geometry::Parabola parabola(geometry::real baselineY) const;
+
 	void setLeftEdge(VoronoiEdge* leftEdge); //TODO: avoid public call
 
 	void invalidateEvent();
 	void resetEvent(CircleEvent* event);
 
 	bool hasTwoDifferentNeighborSites() const;
-
-	//TODO: return solution set
-	static geometry::Point intersection(const geometry::Point& focus1, const geometry::Point& focus2, geometry::real baseLineY, bool left, bool& intersects);
 protected:
 	VoronoiSite* _site;
 	BeachLine* beachLine;
