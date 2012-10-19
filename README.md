@@ -22,6 +22,10 @@ Building
 	> mkdir build && cd build
 	> cmake ..
 	> make
+
+If you also want to compile the demo program, replace the second command with the following:
+
+	> cmake .. -DBUILD_WITH_DEMO=true
     
 License
 -----------
