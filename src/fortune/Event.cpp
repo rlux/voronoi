@@ -78,8 +78,7 @@ VoronoiSite* SiteEvent::site() const
 
 CircleEvent::CircleEvent(Arc* arc, Circle circle) : valid(true), _arc(arc), _circle(circle)
 {
-	arc->invalidateEvent();
-	arc->event = this;
+	arc->resetEvent(this);
 }
 
 bool CircleEvent::isCircleEvent() const

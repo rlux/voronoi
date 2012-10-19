@@ -50,6 +50,9 @@ public:
 private:
 	Arc* _firstElement;
 	Arc* _lastElement;
+
+	void linkArcs(Arc* arc1, Arc* arc2);
+	void unlinkArc(Arc* arc);
 };
 
 } //end namespace fortune

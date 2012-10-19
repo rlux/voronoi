@@ -43,32 +43,30 @@ public:
 
 	VoronoiSite* site() const;
 
-	/*void insert(Arc* arc);
-	void splitWith(Arc* arc);*/
+	Arc* prev() const;
+	Arc* next() const;
+
+	VoronoiEdge* leftEdge() const;
+	VoronoiEdge* rightEdge() const;
+
+	void setLeftEdge(VoronoiEdge* leftEdge); //TODO: avoid public call
 
 	void invalidateEvent();
-
-	VoronoiEdge* rightEdge();
+	void resetEvent(CircleEvent* event);
 
 	bool getTriangle(geometry::Triangle& triangle) const; //TODO: find better name
 
 	//TODO: return solution set
 	static geometry::Point intersection(const geometry::Point& focus1, const geometry::Point& focus2, geometry::real baseLineY, bool left, bool& intersects);
-
-	VoronoiEdge* leftEdge;
-	
-	Arc* prev;
-	Arc* next;
-
-	CircleEvent* event;
 protected:
 	VoronoiSite* _site;
 	BeachLine* beachLine;
+	CircleEvent* _event;
+	VoronoiEdge* _leftEdge;
+	Arc* _prev;
+	Arc* _next;
 
 	Arc(BeachLine* beachLine, VoronoiSite* site);
-
-	static void connect(Arc* arc1, Arc* arc2);
-	static void remove(Arc* arc);
 };
 
 } //end namespace fortune

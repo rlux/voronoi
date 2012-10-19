@@ -60,8 +60,8 @@ void BeachLine::insert(Arc* arc)
 
 void BeachLine::insertAfter(Arc* newArc, Arc* after)
 {
-	Arc::connect(newArc, after->next);
-	Arc::connect(after, newArc);
+	linkArcs(newArc, after->next());
+	linkArcs(after, newArc);
 	if (after==_lastElement) {
 		_lastElement = newArc;
 	}
@@ -70,7 +70,7 @@ void BeachLine::insertAfter(Arc* newArc, Arc* after)
 void BeachLine::splitArcWith(Arc* arc, Arc* newArc)
 {
 	Arc* duplicate = createArc(arc->_site);
-	duplicate->leftEdge = newArc->leftEdge;
+	duplicate->_leftEdge = newArc->_leftEdge;
 	
 	insertAfter(duplicate, arc);
 	insertAfter(newArc, arc);
@@ -78,16 +78,16 @@ void BeachLine::splitArcWith(Arc* arc, Arc* newArc)
 
 Arc* BeachLine::arcFor(const Point& p) const
 {
-	for (Arc* arc=_firstElement; arc; arc=arc->next) {
-		if (!arc->next) {
+	for (Arc* arc=_firstElement; arc; arc=arc->next()) {
+		if (!arc->next()) {
 			if (arc->site()->position().y()==p.y()) return 0;
 			return arc;
 		}
 		
-		bool left = arc->site()->position().y()>arc->next->site()->position().y();
+		bool left = arc->site()->position().y()>arc->next()->site()->position().y();
 
 		bool intersects;
-		Point intersection = Arc::intersection(arc->site()->position(), arc->next->site()->position(), p.y(), left, intersects);
+		Point intersection = Arc::intersection(arc->site()->position(), arc->next()->site()->position(), p.y(), left, intersects);
 		if (!intersects) continue;
 
 		if (p.x()<=intersection.x()) {
@@ -105,18 +105,42 @@ Arc* BeachLine::lastElement() const
 
 void BeachLine::replaceArc(Arc* arc, VoronoiEdge* edge)
 {
-	Arc* prev = arc->prev;
-	Arc* next = arc->next;
+	Arc* prev = arc->prev();
+	Arc* next = arc->next();
 	
 	if (!prev) {
 		_firstElement = next;
 	}
 	
 	if (next) {
-		next->leftEdge = edge;
+		next->_leftEdge = edge;
 	} else {
 		_lastElement = prev;
 	}
 	
-	Arc::remove(arc);
+	unlinkArc(arc);
+	delete arc;
+}
+
+void BeachLine::linkArcs(Arc* arc1, Arc* arc2)
+{
+	if (arc1) {
+		arc1->_next = arc2;
+	}
+	if (arc2) {
+		arc2->_prev = arc1;
+	}
+}
+
+void BeachLine::unlinkArc(Arc* arc)
+{
+	Arc* _prev = arc->_prev;
+	Arc* _next = arc->_next;
+	
+	if (_prev) {
+		_prev->_next = _next;
+	}
+	if (_next) {
+		_next->_prev = _prev;
+	}
 }

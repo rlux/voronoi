@@ -82,19 +82,19 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 	
 	if (arc) {
 		arc->invalidateEvent();
-		newArc->leftEdge = diagram->createEdge(arc->site(), site);
+		newArc->setLeftEdge(diagram->createEdge(arc->site(), site));
 		
 		beachLine.splitArcWith(arc, newArc);
 		//arc->splitWith(newArc);
 	} else {
 		Arc* last = beachLine.lastElement();
-		newArc->leftEdge = diagram->createEdge(last->site(), site);
+		newArc->setLeftEdge(diagram->createEdge(last->site(), site));
 		//last->insert(newArc);
-		beachLine.insertAfter(last, newArc);
+		beachLine.insertAfter(newArc, last);
 	}
 	
-	if (newArc->prev) checkForCircleEvent(newArc->prev);
-	if (newArc->next) checkForCircleEvent(newArc->next);
+	checkForCircleEvent(newArc->prev());
+	checkForCircleEvent(newArc->next());
 }
 
 void Fortune::handleCircleEvent(CircleEvent* event)
@@ -102,9 +102,9 @@ void Fortune::handleCircleEvent(CircleEvent* event)
 	if (!event->isValid()) return;
 	
 	Arc* arc = event->arc();
-	Arc* prev = arc->prev;
-	Arc* next = arc->next;
-	VoronoiEdge* leftEdge = arc->leftEdge;
+	Arc* prev = arc->prev();
+	Arc* next = arc->next();
+	VoronoiEdge* leftEdge = arc->leftEdge();
 	VoronoiEdge* rightEdge = arc->rightEdge();
 	Point s = event->circle().center();
 	
@@ -129,6 +129,7 @@ void Fortune::handleCircleEvent(CircleEvent* event)
 
 void Fortune::checkForCircleEvent(Arc* arc)
 {
+	if (!arc) return;
 	arc->invalidateEvent();
 	
 	Triangle triangle;

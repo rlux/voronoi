@@ -35,49 +35,63 @@ using namespace geometry;
 
 Arc::Arc(BeachLine* beachLine, VoronoiSite* site) : beachLine(beachLine), _site(site)
 {
-	prev = next = 0;
-	event = 0;
+	_prev = _next = 0;
+	_event = 0;
+	_leftEdge = 0;
 }
 
-/*void Arc::insert(Arc* arc)
+Arc* Arc::prev() const
 {
-	connect(arc, next);
-	connect(this, arc);
+	return _prev;
 }
 
-void Arc::splitWith(Arc* arc)
+Arc* Arc::next() const
 {
-	beachLine->splitWith(this, arc);
-}*/
+	return _next;
+}
 
 VoronoiSite* Arc::site() const
 {
 	return _site;
 }
 
+VoronoiEdge* Arc::leftEdge() const
+{
+	return _leftEdge;
+}
+
+VoronoiEdge* Arc::rightEdge() const
+{
+	if (!_next) return 0;
+	return _next->_leftEdge;
+}
+
+void Arc::setLeftEdge(VoronoiEdge* leftEdge)
+{
+	_leftEdge = leftEdge;
+}
+
 bool Arc::getTriangle(Triangle& triangle) const
 {
-	if (!prev || !next || prev->_site == next->_site) return false;
+	if (!_prev || !_next || _prev->_site == _next->_site) return false;
 	
-	triangle = Triangle(prev->_site->position(), next->_site->position(), _site->position());
+	triangle = Triangle(_prev->_site->position(), _next->_site->position(), _site->position());
 	
 	return true;
 }
 
 void Arc::invalidateEvent()
 {
-	if (!event) return;
-	event->invalidate();
-	event = 0;
+	if (!_event) return;
+	_event->invalidate();
+	_event = 0;
 }
 
-VoronoiEdge* Arc::rightEdge()
+void Arc::resetEvent(CircleEvent* event)
 {
-	if (!next) return 0;
-	return next->leftEdge;
+	invalidateEvent();
+	_event = event;
 }
-
-
 
 Point Arc::intersection(const Point& focus1, const Point& focus2, real baselineY, bool left, bool& intersects)
 {	
@@ -122,27 +136,3 @@ Point Arc::intersection(const Point& focus1, const Point& focus2, real baselineY
 	return Point(x,y);
 }
 
-void Arc::connect(Arc* arc1, Arc* arc2)
-{
-	if (arc1) {
-		arc1->next = arc2;
-	}
-	if (arc2) {
-		arc2->prev = arc1;
-	}
-}
-
-void Arc::remove(Arc* arc)
-{
-	Arc* prev = arc->prev;
-	Arc* next = arc->next;
-	
-	if (prev) {
-		prev->next = next;
-	}
-	if (next) {
-		next->prev = prev;
-	}
-
-	delete arc;
-}
