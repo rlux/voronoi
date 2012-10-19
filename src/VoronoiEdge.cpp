@@ -31,7 +31,7 @@ using namespace geometry;
 
 VoronoiEdge::VoronoiEdge(VoronoiSite* left, VoronoiSite* right) : left(left), right(right)
 {
-	line = Line::forNormal((left->position()+right->position())/2,left->position()-right->position());
+	line = Line::forNormal(left->position().midPoint(right->position()),left->position()-right->position());
 }
 
 void VoronoiEdge::addPoint(const Point& point)

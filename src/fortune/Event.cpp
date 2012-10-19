@@ -89,7 +89,7 @@ bool CircleEvent::isCircleEvent() const
 
 Point CircleEvent::position() const
 {
-	return _circle.center()-Point(0,_circle.radius());
+	return _circle.center()-Vector(0,_circle.radius());
 }
 
 bool CircleEvent::isValid() const

@@ -26,11 +26,9 @@
 
 #pragma once
 
-#include <stddef.h>
+#include <geometry/Vector.h>
 
 namespace geometry {
-
-typedef double real;
 
 class Point
 {
@@ -51,21 +49,19 @@ public:
 	bool operator>=(const Point& p) const;
 
 	Point operator-() const;
-	Point& operator+=(const Point& p);
-	Point& operator-=(const Point& p);
+	Point& operator+=(const Vector& p);
+	Point& operator-=(const Vector& v);
 	Point& operator*=(real factor);
 	Point& operator/=(real factor);
-	Point operator+(const Point& p) const;
-	Point operator-(const Point& p) const;
+	Point operator+(const Vector& p) const;
+	Vector operator-(const Point& p) const;
+	Point operator-(const Vector& v) const;
 	Point operator*(real factor) const;
 	Point operator/(real factor) const;
-
-	/* vector operations */
-	real dotProduct(const Point& p) const;
-	real length() const;
-	real squaredLength() const;
 	
-	Point perpendicular() const;
+	Vector toVector() const;
+	
+	Point midPoint(const Point& p) const;
 private:
 	real _x;
 	real _y;

@@ -10,6 +10,7 @@ include_directories("include")
 
 set(sources
 	src/geometry/Point.cpp
+	src/geometry/Vector.cpp
 	src/geometry/Line.cpp
 	src/geometry/Circle.cpp
 	src/geometry/Triangle.cpp

@@ -24,46 +24,50 @@
   * along with Voronoi++.  If not, see <http://www.gnu.org/licenses/>.
   **/
 
-#include <geometry/Triangle.h>
-#include <geometry/Line.h>
+#pragma once
 
-using namespace geometry;
+#include <geometry/real.h>
 
-Triangle::Triangle()
+namespace geometry {
+
+class Point;
+
+class Vector
 {
-}
+public:
+	Vector();
+	Vector(real x, real y);
 
-Triangle::Triangle(const Point& a, const Point& b, const Point& c) : a(a), b(b), c(c)
-{
-}
+	real x() const;
+	real y() const;
+	void setX(real x);
+	void setY(real y);
+	
+	bool operator==(const Vector& v) const;
+	bool operator!=(const Vector& v) const;
 
-Circle Triangle::circumcircle() const
-{
-	Vector ab = b-a;
-	Vector bc = c-b;
+	Vector operator-() const;
+	Vector& operator+=(const Vector& v);
+	Vector& operator-=(const Vector& v);
+	Vector& operator*=(real factor);
+	Vector& operator/=(real factor);
+	Vector operator+(const Vector& v) const;
+	Vector operator-(const Vector& v) const;
+	Vector operator*(real factor) const;
+	Vector operator/(real factor) const;
 	
-	if (ab.x()*bc.y()-ab.y()*bc.x()==0) return Circle(); // all points on a line
-	
-	LineIntersectionSolutionSet solutionSet = Line::forNormal(a.midPoint(b), ab).intersection(Line::forNormal(b.midPoint(c),bc));
-	if (!solutionSet.isOne()) {
-		return Circle();
-	}
-	
-	Point center = solutionSet.point();
-	real r = (center-a).length();
-	
-	return Circle(center, r);
-}
+	Point toPoint() const;
 
-bool Triangle::contains(const Point& p) const
-{
-	return Line::segment(b, c).sameSide(p, a) && Line::segment(a, c).sameSide(p, b) && Line::segment(a, b).sameSide(p, c);
-}
-
-bool Triangle::isClockwise() const
-{
-	Vector ab = b-a;
-	Vector bc = c-b;
+	real dotProduct(const Vector& v) const;
+	real length() const;
+	real squaredLength() const;
 	
-	return ab.x()*bc.y()-ab.y()*bc.x()<0;
-}
+	Vector perpendicular() const;
+private:
+	real _x;
+	real _y;
+};
+
+Vector operator*(real factor, const Vector& v);
+
+} //end namespace geometry

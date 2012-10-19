@@ -27,6 +27,7 @@
 #pragma once
 
 #include <geometry/Point.h>
+#include <geometry/Vector.h>
 
 namespace geometry {
 	
@@ -44,15 +45,15 @@ public:
 
 	Line();
 	
-	static Line forDirection(const Point& supportVector, const Point& direction);
-	static Line forNormal(const Point& supportVector, const Point& normal);
+	static Line forDirection(const Point& supportVector, const Vector& direction);
+	static Line forNormal(const Point& supportVector, const Vector& normal);
 	
-	static Line ray(const Point& supportVector, const Point& direction);
+	static Line ray(const Point& supportVector, const Vector& direction);
 	static Line segment(const Point& point1, const Point& point2);
 	
 	Point supportVector() const;
 	Point startPoint() const;
-	Point direction() const;
+	Vector direction() const;
 	Point endPoint() const;
 	Type type() const;
 	
@@ -65,23 +66,23 @@ public:
 	
 	void setStartPoint(const Point& point);
 	void setEndPoint(const Point& point);
-	void setDirection(const Point& direction);
+	void setDirection(const Vector& direction);
 	
 	void invertDirection();
 	bool addPoint(const Point& point);
 
 	const LineIntersectionSolutionSet intersection(const Line& line) const;
-	Point normal() const;
-	Point toPoint(const Point& point) const; //TODO: rename (to let fall a perpendicular?)
+	Vector normal() const;
+	Vector toPoint(const Point& point) const; //TODO: rename (to let fall a perpendicular?)
 	
 	bool sameSide(const Point& p1, const Point& p2) const;
 protected:
 	Point _startPoint;
-	Point _direction;
+	Vector _direction;
 	Point _endPoint;	
 	Type _type;
 
-	Line(Type type, const Point& start, const Point& end, const Point& direction);
+	Line(Type type, const Point& start, const Point& end, const Vector& direction);
 
 	bool intersectionCoefficient(const Line& line, real& coefficient) const;
 	LineIntersectionSolutionSet lineIntersection(const Line& line) const;

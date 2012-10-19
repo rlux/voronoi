@@ -33,7 +33,7 @@ Line::Line() : _type(NULL_LINE)
 {
 }
 
-Line::Line(Type type, const Point& start, const Point& end, const Point& direction) : _type(type), _startPoint(start), _endPoint(end), _direction(direction)
+Line::Line(Type type, const Point& start, const Point& end, const Vector& direction) : _type(type), _startPoint(start), _endPoint(end), _direction(direction)
 {	
 }
 
@@ -41,16 +41,16 @@ Line Line::segment(const Point& point1, const Point& point2) {
 	return Line(SEGMENT, point1, point2, point2-point1);
 }
 
-Line Line::ray(const Point& supportVector, const Point& direction) {
+Line Line::ray(const Point& supportVector, const Vector& direction) {
 	return Line(RAY, supportVector, supportVector+direction, direction);
 }
 
-Line Line::forDirection(const Point& supportVector, const Point& direction)
+Line Line::forDirection(const Point& supportVector, const Vector& direction)
 {
 	return Line(LINE, supportVector, supportVector+direction, direction);
 }
 
-Line Line::forNormal(const Point& supportVector, const Point& normal)
+Line Line::forNormal(const Point& supportVector, const Vector& normal)
 {
 	return Line::forDirection(supportVector, normal.perpendicular());
 }
@@ -65,7 +65,7 @@ Point Line::startPoint() const
 	return _startPoint;
 }
 
-Point Line::direction() const
+Vector Line::direction() const
 {
 	return _direction;
 }
@@ -92,7 +92,7 @@ void Line::setEndPoint(const Point& point)
 	_direction = _endPoint - _startPoint;
 }
 
-void Line::setDirection(const Point& direction)
+void Line::setDirection(const Vector& direction)
 {
 	_direction = direction;
 	_endPoint = _startPoint + _direction;
@@ -181,9 +181,9 @@ LineIntersectionSolutionSet Line::lineIntersection(const Line& line) const
 
 bool Line::intersectionCoefficient(const Line& line, real& coefficient) const
 {
-	Point u = _direction;
-	Point v = line._direction;
-	Point w = _startPoint-line._startPoint;
+	Vector u = _direction;
+	Vector v = line._direction;
+	Vector w = _startPoint-line._startPoint;
 	real denominator = v.x()*u.y()-v.y()*u.x();
 	if (denominator==0) {
 		return false;
@@ -206,12 +206,12 @@ bool Line::containsCoefficient(real coefficient) const
 	}
 }
 
-Point Line::normal() const
+Vector Line::normal() const
 {
 	return _direction.perpendicular();
 }
 
-Point Line::toPoint(const Point& point) const
+Vector Line::toPoint(const Point& point) const
 {
 	return point-lineIntersection(Line::forDirection(point, normal())).point();
 }

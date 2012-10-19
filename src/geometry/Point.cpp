@@ -25,8 +25,6 @@
   **/
 
 #include <geometry/Point.h>
-#include <functional>
-#include <cmath>
 
 using namespace geometry;
 
@@ -46,16 +44,16 @@ Point Point::operator-() const {
 	return Point(-_x, -_y);
 }
 
-Point& Point::operator+=(const Point& p) {
-	_x += p._x;
-	_y += p._y;
+Point& Point::operator+=(const Vector& v) {
+	_x += v.x();
+	_y += v.y();
 	
 	return *this;
 }
 
-Point& Point::operator-=(const Point& p) {
-	_x -= p._x;
-	_y -= p._y;
+Point& Point::operator-=(const Vector& v) {
+	_x -= v.x();
+	_y -= v.y();
 	
 	return *this;
 }
@@ -74,12 +72,16 @@ Point& Point::operator/=(real factor) {
 	return *this;
 }
 
-Point Point::operator+(const Point& p) const {
-	return Point(_x + p._x, _y + p._y);
+Point Point::operator+(const Vector& v) const {
+	return Point(_x + v.x(), _y + v.y());
 }
 
-Point Point::operator-(const Point& p) const {
-	return Point(_x - p._x, _y - p._y);
+Point Point::operator-(const Vector& v) const {
+	return Point(_x - v.x(), _y - v.y());
+}
+
+Vector Point::operator-(const Point& p) const {
+	return Vector(_x - p._x, _y - p._y);
 }
 
 Point Point::operator*(real factor) const {
@@ -120,27 +122,20 @@ bool Point::operator>=(const Point& p) const
 	return _x >= p._x || _y >= p._y;
 }
 
-real Point::dotProduct(const Point& p) const {
-	return _x * p._x + _y * p._y;
-}
-
-real Point::length() const {
-	return std::sqrt(squaredLength());
-}
-
-real Point::squaredLength() const {
-	return _x * _x + _y * _y;
-}
-
-Point Point::perpendicular() const
-{
-	return Point(-_y, _x);
-}
-
 real Point::x() const {
 	return _x;
 }
 
 real Point::y() const {
 	return _y;
+}
+
+Vector Point::toVector() const
+{
+	return Vector(_x, _y);
+}
+
+Point Point::midPoint(const Point& p) const
+{
+	return Point((_x + p._x) / 2, (_y + p._y) / 2);
 }
