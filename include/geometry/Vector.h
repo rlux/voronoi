@@ -62,6 +62,8 @@ public:
 	real length() const;
 	real squaredLength() const;
 	
+	bool isParallelTo(const Vector& v) const;
+	
 	Vector perpendicular() const;
 private:
 	real _x;

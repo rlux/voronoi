@@ -155,9 +155,7 @@ const LineIntersectionSolutionSet Line::intersection(const Line& line) const
 	real s;
 	real t;
 	if (!intersectionCoefficient(line, s) || !line.intersectionCoefficient(*this, t)) {
-		//check for infinite solutions: w parallel to u
-		//extract vector class, parallelTo()
-		return LineIntersectionSolutionSet::noSolution();
+		return overlaps(line) ? LineIntersectionSolutionSet::infiniteSolutions() : LineIntersectionSolutionSet::noSolution();
 	}
 	
 	if (!containsCoefficient(s) || !line.containsCoefficient(t)) {
@@ -171,9 +169,7 @@ LineIntersectionSolutionSet Line::lineIntersection(const Line& line) const
 {
 	real s;
 	if (!intersectionCoefficient(line, s)) {
-		//check for infinite solutions: w parallel to u
-		//extract vector class, parallelTo()
-		return LineIntersectionSolutionSet::noSolution();
+		return lineContains(line.supportVector()) ? LineIntersectionSolutionSet::infiniteSolutions() : LineIntersectionSolutionSet::noSolution();
 	}
 	
 	return LineIntersectionSolutionSet(_startPoint+s*_direction);
@@ -211,14 +207,60 @@ Vector Line::normal() const
 	return _direction.perpendicular();
 }
 
-Vector Line::toPoint(const Point& point) const
+Line Line::perpendicular(const Point& point) const
 {
-	return point-lineIntersection(Line::forDirection(point, normal())).point();
+	return Line::forDirection(point, normal());
+}
+
+bool Line::lineContains(const Point& p) const
+{
+	return _direction.isParallelTo(p - _startPoint);
+}
+
+bool Line::isParallelTo(const Line& line) const
+{
+	return _direction.isParallelTo(line.direction());
+}
+
+bool Line::contains(const Point& p) const
+{
+	if (!lineContains(p)) {
+		return false;
+	}
+	
+	return containsCoefficient(coefficientForPointOnLine(p));
+}
+
+bool Line::overlaps(const Line& line) const
+{
+	if (!isParallelTo(line) || !lineContains(line.startPoint())) {
+		return false;
+	}
+	
+	return
+		containsCoefficient(coefficientForPointOnLine(line.startPoint())) ||
+		containsCoefficient(coefficientForPointOnLine(line.endPoint())) ||
+		line.containsCoefficient(line.coefficientForPointOnLine(_startPoint)) ||
+		line.containsCoefficient(line.coefficientForPointOnLine(_endPoint));
 }
 
 bool Line::sameSide(const Point& p1, const Point& p2) const
 {
-	return toPoint(p1).dotProduct(toPoint(p2))>0;
+	Vector v1 = p1-lineIntersection(perpendicular(p1)).point();
+	Vector v2 = p2-lineIntersection(perpendicular(p2)).point();
+	
+	return v1.dotProduct(v2)>0;
+}
+
+real Line::coefficientForPointOnLine(const Point& p) const
+{
+	real directionLength = _direction.length();
+	
+	if (directionLength <= 0) {
+		return 0;
+	}
+	
+	return (p - _startPoint).length() / directionLength;
 }
 
 
@@ -266,4 +308,3 @@ const Point& LineIntersectionSolutionSet::point() const
 {
 	return _point;
 }
-

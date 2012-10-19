@@ -117,6 +117,11 @@ Vector Vector::perpendicular() const
 	return Vector(-_y, _x);
 }
 
+bool Vector::isParallelTo(const Vector& v) const
+{
+	return dotProduct(v) == 0;
+}
+
 real Vector::x() const
 {
 	return _x;
