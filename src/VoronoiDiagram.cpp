@@ -123,5 +123,6 @@ bool equalSites(VoronoiSite* site1, VoronoiSite* site2)
 void VoronoiDiagram::removeDuplicates(std::vector<VoronoiSite*>& sites)
 {
 	std::sort(sites.begin(), sites.end(), compareSites);
-	std::unique(sites.begin(), sites.end(), equalSites);
+	std::vector<VoronoiSite*>::iterator newEnd = std::unique(sites.begin(), sites.end(), equalSites);
+	sites.resize(newEnd - sites.begin());
 }
