@@ -73,8 +73,11 @@ public:
 
 	const LineIntersectionSolutionSet intersection(const Line& line) const;
 	Vector normal() const;
-	Vector toPoint(const Point& point) const; //TODO: rename (to let fall a perpendicular?)
+	Line perpendicular(const Point& point) const;
 	
+	bool isParallelTo(const Line& line) const;
+	bool contains(const Point& p) const;
+	bool overlaps(const Line& line) const;
 	bool sameSide(const Point& p1, const Point& p2) const;
 protected:
 	Point _startPoint;
@@ -84,9 +87,11 @@ protected:
 
 	Line(Type type, const Point& start, const Point& end, const Vector& direction);
 
+	bool lineContains(const Point& p) const;
 	bool intersectionCoefficient(const Line& line, real& coefficient) const;
 	LineIntersectionSolutionSet lineIntersection(const Line& line) const;
 	bool containsCoefficient(real coefficient) const;
+	real coefficientForPointOnLine(const Point& p) const;
 };
 
 class LineIntersectionSolutionSet
