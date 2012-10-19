@@ -13,7 +13,6 @@ set(sources
 	src/geometry/Vector.cpp
 	src/geometry/Line.cpp
 	src/geometry/Circle.cpp
-	src/geometry/Triangle.cpp
 	src/geometry/Rectangle.cpp
 	src/geometry/ConvexPolygon.cpp
 	

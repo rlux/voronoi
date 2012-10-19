@@ -28,7 +28,6 @@
 
 #include <VoronoiSite.h>
 #include <VoronoiEdge.h>
-#include <geometry/Triangle.h>
 
 namespace voronoi {
 namespace fortune {
@@ -54,7 +53,7 @@ public:
 	void invalidateEvent();
 	void resetEvent(CircleEvent* event);
 
-	bool getTriangle(geometry::Triangle& triangle) const; //TODO: find better name
+	bool hasTwoDifferentNeighborSites() const;
 
 	//TODO: return solution set
 	static geometry::Point intersection(const geometry::Point& focus1, const geometry::Point& focus2, geometry::real baseLineY, bool left, bool& intersects);

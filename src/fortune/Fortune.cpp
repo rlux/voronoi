@@ -26,8 +26,6 @@
 
 #include <fortune/Fortune.h>
 
-#include <geometry/Triangle.h>
-
 using namespace voronoi;
 using namespace voronoi::fortune;
 using namespace geometry;
@@ -132,12 +130,15 @@ void Fortune::checkForCircleEvent(Arc* arc)
 	if (!arc) return;
 	arc->invalidateEvent();
 	
-	Triangle triangle;
-	if (!arc->getTriangle(triangle)) return;
+	if (!arc->hasTwoDifferentNeighborSites()) return;
 	
-	if (triangle.isClockwise()) return;
+	Point a = arc->prev()->site()->position();
+	Point b = arc->next()->site()->position();
+	Point c = arc->site()->position();
 	
-	Circle circle = triangle.circumcircle();
+	if (clockwise(a, b, c)) return;
+	
+	Circle circle(a, b, c);
 	
 	if (circle.center().y()-circle.radius() > sweepPos) {
 		return;

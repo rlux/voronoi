@@ -35,6 +35,7 @@ class Circle
 public:
 	Circle();
 	Circle(const Point& center, real radius);
+	Circle(const Point& a, const Point& b, const Point& c);
 
 	Point center() const;
 	real radius() const;

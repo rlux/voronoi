@@ -71,13 +71,9 @@ void Arc::setLeftEdge(VoronoiEdge* leftEdge)
 	_leftEdge = leftEdge;
 }
 
-bool Arc::getTriangle(Triangle& triangle) const
+bool Arc::hasTwoDifferentNeighborSites() const
 {
-	if (!_prev || !_next || _prev->_site == _next->_site) return false;
-	
-	triangle = Triangle(_prev->_site->position(), _next->_site->position(), _site->position());
-	
-	return true;
+	return _prev && _next && _prev->_site != _next->_site;
 }
 
 void Arc::invalidateEvent()

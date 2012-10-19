@@ -25,6 +25,7 @@
   **/
 
 #include <geometry/Circle.h>
+#include <geometry/Line.h>
 
 using namespace geometry;
 
@@ -34,6 +35,24 @@ Circle::Circle() : _center(Point()), _radius(0)
 
 Circle::Circle(const Point& center, real radius) : _center(center), _radius(radius)
 {
+}
+
+Circle::Circle(const Point& a, const Point& b, const Point& c)
+{
+	Vector ab = b-a;
+	Vector bc = c-b;
+	
+	if (ab.x()*bc.y()-ab.y()*bc.x()==0) { // all points on a line
+		return;
+	}
+	
+	LineIntersectionSolutionSet solutionSet = Line::forNormal(a.midPoint(b), ab).intersection(Line::forNormal(b.midPoint(c),bc));
+	if (!solutionSet.isOne()) {
+		return;
+	}
+	
+	_center = solutionSet.point();
+	_radius = (_center-a).length();
 }
 
 Point Circle::center() const

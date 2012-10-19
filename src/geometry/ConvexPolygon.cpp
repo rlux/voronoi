@@ -25,7 +25,6 @@
   **/
 
 #include <geometry/ConvexPolygon.h>
-#include <geometry/Triangle.h>
 #include <stdexcept>
 
 using namespace geometry;
@@ -123,7 +122,7 @@ bool ConvexPolygon::violatesConvexity(const Point& point) const
 		return false;
 	}
 	
-	return Triangle(_points[0], _points[1], _points[2]).isClockwise() != Triangle(_points[_points.size()-2], _points[_points.size()-1], point).isClockwise();
+	return clockwise(_points[0], _points[1], _points[2]) != clockwise(_points[_points.size()-2], _points[_points.size()-1], point);
 }
 
 const std::vector<Point> PolygonIntersectionSolutionSet::points() const

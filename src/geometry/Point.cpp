@@ -139,3 +139,11 @@ Point Point::midPoint(const Point& p) const
 {
 	return Point((_x + p._x) / 2, (_y + p._y) / 2);
 }
+
+bool geometry::clockwise(const Point& a, const Point& b, const Point& c)
+{
+	Vector ab = b-a;
+	Vector bc = c-b;
+	
+	return ab.x()*bc.y()-ab.y()*bc.x()<0;
+}
