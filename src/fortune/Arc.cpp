@@ -26,23 +26,20 @@
 
 #include <fortune/Arc.h>
 #include <fortune/Event.h>
+#include <fortune/BeachLine.h>
 #include <cmath>
 
 using namespace voronoi;
 using namespace voronoi::fortune;
 using namespace geometry;
 
-Arc::Arc(VoronoiSite* site, VoronoiEdge* leftEdge) : _site(site), leftEdge(leftEdge)
+Arc::Arc(BeachLine* beachLine, VoronoiSite* site) : beachLine(beachLine), _site(site)
 {
 	prev = next = 0;
 	event = 0;
 }
 
-Arc::~Arc()
-{
-}
-
-void Arc::insert(Arc* arc)
+/*void Arc::insert(Arc* arc)
 {
 	connect(arc, next);
 	connect(this, arc);
@@ -50,11 +47,8 @@ void Arc::insert(Arc* arc)
 
 void Arc::splitWith(Arc* arc)
 {
-	Arc* duplicate = new Arc(_site, arc->leftEdge);
-	
-	insert(duplicate);
-	insert(arc);
-}
+	beachLine->splitWith(this, arc);
+}*/
 
 VoronoiSite* Arc::site() const
 {

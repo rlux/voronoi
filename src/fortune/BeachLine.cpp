@@ -25,32 +25,60 @@
   **/
 
 #include <fortune/BeachLine.h>
+#include <stdexcept>
 
 using namespace voronoi;
 using namespace voronoi::fortune;
 using namespace geometry;
 
-BeachLine::BeachLine() : firstElement(0)
+BeachLine::BeachLine() : _firstElement(0), _lastElement(0)
 {
+}
+
+Arc* BeachLine::createArc(VoronoiSite* site)
+{
+	return new Arc(this, site);
 }
 
 bool BeachLine::isEmpty() const
 {
-	return firstElement==0;
+	return _firstElement==0;
 }
 
-void BeachLine::addLast(Arc* arc)
+void BeachLine::insert(Arc* arc)
 {
-	if (!firstElement) {
-		firstElement = arc;
-	} else {
-		lastElement()->insert(arc);
+	if (arc->beachLine != this) {
+		throw std::runtime_error("Cannot insert arc from another beachline");
 	}
+	
+	if (!_firstElement) {
+		_firstElement = _lastElement = arc;
+	} else {
+		insertAfter(arc, _lastElement);
+	}
+}
+
+void BeachLine::insertAfter(Arc* newArc, Arc* after)
+{
+	Arc::connect(newArc, after->next);
+	Arc::connect(after, newArc);
+	if (after==_lastElement) {
+		_lastElement = newArc;
+	}
+}
+
+void BeachLine::splitArcWith(Arc* arc, Arc* newArc)
+{
+	Arc* duplicate = createArc(arc->_site);
+	duplicate->leftEdge = newArc->leftEdge;
+	
+	insertAfter(duplicate, arc);
+	insertAfter(newArc, arc);
 }
 
 Arc* BeachLine::arcFor(const Point& p) const
 {
-	for (Arc* arc=firstElement; arc; arc=arc->next) {
+	for (Arc* arc=_firstElement; arc; arc=arc->next) {
 		if (!arc->next) {
 			if (arc->site()->position().y()==p.y()) return 0;
 			return arc;
@@ -72,9 +100,7 @@ Arc* BeachLine::arcFor(const Point& p) const
 
 Arc* BeachLine::lastElement() const
 {
-	Arc* last = firstElement;
-	for (last; last->next; last = last->next);
-	return last;
+	return _lastElement;
 }
 
 void BeachLine::replaceArc(Arc* arc, VoronoiEdge* edge)
@@ -83,11 +109,13 @@ void BeachLine::replaceArc(Arc* arc, VoronoiEdge* edge)
 	Arc* next = arc->next;
 	
 	if (!prev) {
-		firstElement = 0;
+		_firstElement = next;
 	}
 	
 	if (next) {
 		next->leftEdge = edge;
+	} else {
+		_lastElement = prev;
 	}
 	
 	Arc::remove(arc);

@@ -37,14 +37,19 @@ class BeachLine
 public:
 	BeachLine();
 
+	Arc* createArc(VoronoiSite* site);
+
 	bool isEmpty() const;
-	void addLast(Arc* arc);
+	void insert(Arc* arc);
+	void insertAfter(Arc* newArc, Arc* after);
+	void splitArcWith(Arc* arc, Arc* newArc);
 
 	Arc* arcFor(const geometry::Point& p) const;
 	void replaceArc(Arc* arc, VoronoiEdge* edge);
 	Arc* lastElement() const;
 private:
-	Arc* firstElement;
+	Arc* _firstElement;
+	Arc* _lastElement;
 };
 
 } //end namespace fortune

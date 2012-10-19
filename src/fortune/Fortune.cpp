@@ -71,10 +71,10 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 {
 	VoronoiSite* site = event->site();
 	
-	Arc* newArc = new Arc(site);
+	Arc* newArc = beachLine.createArc(site);
 	
 	if (beachLine.isEmpty()) {
-		beachLine.addLast(newArc);
+		beachLine.insert(newArc);
 		return;
 	}
 	
@@ -83,11 +83,14 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 	if (arc) {
 		arc->invalidateEvent();
 		newArc->leftEdge = diagram->createEdge(arc->site(), site);
-		arc->splitWith(newArc);
+		
+		beachLine.splitArcWith(arc, newArc);
+		//arc->splitWith(newArc);
 	} else {
 		Arc* last = beachLine.lastElement();
 		newArc->leftEdge = diagram->createEdge(last->site(), site);
-		last->insert(newArc);
+		//last->insert(newArc);
+		beachLine.insertAfter(last, newArc);
 	}
 	
 	if (newArc->prev) checkForCircleEvent(newArc->prev);

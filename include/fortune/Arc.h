@@ -34,17 +34,17 @@ namespace voronoi {
 namespace fortune {
 
 class CircleEvent;
+class BeachLine;
 
 class Arc
 {
 public:
-	Arc(VoronoiSite* site, VoronoiEdge* leftEdge = 0);
-	~Arc();
+	friend class BeachLine;
 
 	VoronoiSite* site() const;
 
-	void insert(Arc* arc);
-	void splitWith(Arc* arc);
+	/*void insert(Arc* arc);
+	void splitWith(Arc* arc);*/
 
 	void invalidateEvent();
 
@@ -54,17 +54,21 @@ public:
 
 	//TODO: return solution set
 	static geometry::Point intersection(const geometry::Point& focus1, const geometry::Point& focus2, geometry::real baseLineY, bool left, bool& intersects);
-	static void connect(Arc* arc1, Arc* arc2);
-	static void remove(Arc* arc);
 
 	VoronoiEdge* leftEdge;
-
+	
 	Arc* prev;
 	Arc* next;
 
 	CircleEvent* event;
 protected:
 	VoronoiSite* _site;
+	BeachLine* beachLine;
+
+	Arc(BeachLine* beachLine, VoronoiSite* site);
+
+	static void connect(Arc* arc1, Arc* arc2);
+	static void remove(Arc* arc);
 };
 
 } //end namespace fortune
