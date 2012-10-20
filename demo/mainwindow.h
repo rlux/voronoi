@@ -46,6 +46,7 @@ class MainWindow
 		MainWindow(QWidget* parent = 0);
 	protected:
 		voronoi::VoronoiDiagram diagram;
+		geometry::ConvexPolygon boundingBox;
 		QPixmap pixmap;
 		QPoint offset;
 		QPoint lastMousePosition;
@@ -55,7 +56,6 @@ class MainWindow
 		float zoomFactor();
 		
 		void paintEvent(QPaintEvent* event);
-		void resizeEvent(QResizeEvent* event);
 		void mouseMoveEvent(QMouseEvent* event);
 		void mousePressEvent(QMouseEvent* event);
 		void mouseReleaseEvent(QMouseEvent* event);

@@ -97,6 +97,11 @@ const PolygonIntersectionSolutionSet ConvexPolygon::intersection(const Line& lin
 	return result;
 }
 
+const Rectangle ConvexPolygon::boundingBox() const
+{
+	return _boundingBox;
+}
+
 ConvexPolygon& ConvexPolygon::operator<<(const Point& point)
 {
 	if (violatesConvexity(point)) {
@@ -104,6 +109,7 @@ ConvexPolygon& ConvexPolygon::operator<<(const Point& point)
 	}
 	
 	_points.push_back(point);
+	_boundingBox.resizeToInclude(point);
 	
 	if (_points.size() >= 1) {
 		if (_edges.size() > 0) {

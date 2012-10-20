@@ -30,6 +30,10 @@
 
 using namespace geometry;
 
+Rectangle::Rectangle()
+{
+}
+
 Rectangle::Rectangle(const Point& a, const Point& b)
 {
 	_left = std::min(a.x(), b.x());
@@ -100,4 +104,30 @@ Point Rectangle::bottomLeft() const
 Point Rectangle::bottomRight() const
 {
 	return Point(bottom(), right());
+}
+
+bool Rectangle::contains(const Point& p) const
+{
+	return left() <= p.x() && p.x() <= right() && top() <= p.y() && p.y() <= bottom();
+}
+
+void Rectangle::resizeToInclude(const Point& p)
+{
+	if (contains(p)) {
+		return;
+	}
+	
+	if (p.x() < left()) {
+		_width += left() - p.x();
+		_left = p.x();
+	} else if (p.x() > right()) {
+		_width += p.x() - right();
+	}
+	
+	if (p.y() < top()) {
+		_height += top() - p.y();
+		_top = p.y();
+	} else if (p.y() > bottom()) {
+		_height += p.y() - bottom();
+	}
 }

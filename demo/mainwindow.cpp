@@ -36,6 +36,15 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), dragging(false), 
 {
 	qsrand(1000); // static number to initialize rng
 	
+	boundingBox
+		<< geometry::Point(1280 / 3, 0)
+		<< geometry::Point(2 * 1280 / 3, 0)
+		<< geometry::Point(1280, 720 / 2)
+		<< geometry::Point(2 * 1280 / 3, 720)
+		<< geometry::Point(1280 / 3, 720)
+		<< geometry::Point(0, 2 * 720 / 3)
+		<< geometry::Point(0, 720 / 3);
+	
 	setMouseTracking(true);
 	createVoronoiDiagram();
 }
@@ -62,16 +71,15 @@ void MainWindow::createVoronoiDiagram()
 
 void MainWindow::recacheVoronoiDiagram()
 {
-	pixmap = QPixmap(width(), height());
+	geometry::Rectangle boundingRect = boundingBox.boundingBox();
+	float zf = zoomFactor();
+	
+	pixmap = QPixmap(boundingRect.width() * zf, boundingRect.height() * zf + 1);
 	pixmap.fill(Qt::white);
 	
 	QPainter painter(&pixmap);
 	//painter.setRenderHint(QPainter::Antialiasing);
 	painter.setPen(Qt::black);
-	
-	geometry::ConvexPolygon boundingBox;
-	boundingBox << geometry::Point(1280 / 3, 0) << geometry::Point(2 * 1280 / 3, 0) << geometry::Point(1280, 720 / 2) << geometry::Point(2 * 1280 / 3, 720) << geometry::Point(1280 / 3, 720) << geometry::Point(0, 2 * 720 / 3) << geometry::Point(0, 720 / 3);
-	float zf = zoomFactor();
 	
 	for (std::map<VoronoiSite*, VoronoiCell*>::iterator it = diagram.cells().begin(); it != diagram.cells().end(); ++it) {
 		std::pair<VoronoiSite*, VoronoiCell*> pair = *it;
@@ -81,10 +89,10 @@ void MainWindow::recacheVoronoiDiagram()
 			geometry::Line line = (*edgesIt)->getRenderLine(boundingBox);
 			
 			painter.drawLine(
-				offset.x()+line.startPoint().x() * zf,
-				offset.y()+line.startPoint().y() * zf,
-				offset.x()+line.endPoint().x() * zf,
-				offset.y()+line.endPoint().y() * zf
+				line.startPoint().x() * zf,
+				line.startPoint().y() * zf,
+				line.endPoint().x() * zf,
+				line.endPoint().y() * zf
 			);
 		}
 	}
@@ -95,10 +103,10 @@ void MainWindow::recacheVoronoiDiagram()
 		const geometry::Line& line = *it;
 		
 		painter.drawLine(
-			offset.x()+line.startPoint().x() * zf,
-			offset.y()+line.startPoint().y() * zf,
-			offset.x()+line.endPoint().x() * zf,
-			offset.y()+line.endPoint().y() * zf
+			line.startPoint().x() * zf,
+			line.startPoint().y() * zf,
+			line.endPoint().x() * zf,
+			line.endPoint().y() * zf
 		);
 	}
 }
@@ -107,12 +115,8 @@ void MainWindow::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(this);
 	
-	painter.drawPixmap(0, 0, pixmap);
-}
-
-void MainWindow::resizeEvent(QResizeEvent* event)
-{
-	recacheVoronoiDiagram();
+	painter.fillRect(0, 0, width(), height(), Qt::white);
+	painter.drawPixmap(offset.x(), offset.y(), pixmap);
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent* event)
@@ -120,7 +124,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event)
 	if (dragging) {
 		offset += event->pos()-lastMousePosition;
 		lastMousePosition = event->pos();
-		recacheVoronoiDiagram();
 		update();
 	}
 }

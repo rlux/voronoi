@@ -33,6 +33,7 @@ namespace geometry {
 class Rectangle
 {
 public:
+	Rectangle();
 	Rectangle(const Point& a, const Point& b);
 	Rectangle(real left, real top, real width, real height);
 
@@ -50,6 +51,9 @@ public:
 	Point topRight() const;
 	Point bottomLeft() const;
 	Point bottomRight() const;
+	
+	bool contains(const Point& p) const;
+	void resizeToInclude(const Point& p);
 protected:
 	real _top;
 	real _left;
