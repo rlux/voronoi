@@ -74,40 +74,27 @@ void MainWindow::recacheVoronoiDiagram()
 	geometry::Rectangle boundingRect = boundingBox.boundingBox();
 	float zf = zoomFactor();
 	
-	pixmap = QPixmap(boundingRect.width() * zf, boundingRect.height() * zf + 1);
-	pixmap.fill(Qt::white);
-	
-	QPainter painter(&pixmap);
-	//painter.setRenderHint(QPainter::Antialiasing);
-	painter.setPen(Qt::black);
+	voronoiPath = QPainterPath();
+	boundingPath = QPainterPath();
 	
 	for (std::map<VoronoiSite*, VoronoiCell*>::iterator it = diagram.cells().begin(); it != diagram.cells().end(); ++it) {
 		std::pair<VoronoiSite*, VoronoiCell*> pair = *it;
 		VoronoiCell* cell = pair.second;
 		
+		
 		for (std::vector<VoronoiEdge*>::iterator edgesIt = cell->edges.begin(); edgesIt != cell->edges.end(); ++edgesIt) {
 			geometry::Line line = (*edgesIt)->getRenderLine(boundingBox);
 			
-			painter.drawLine(
-				line.startPoint().x() * zf,
-				line.startPoint().y() * zf,
-				line.endPoint().x() * zf,
-				line.endPoint().y() * zf
-			);
+			voronoiPath.moveTo(line.startPoint().x(), line.startPoint().y());
+			voronoiPath.lineTo(line.endPoint().x(), line.endPoint().y());
 		}
 	}
-	
-	painter.setPen(Qt::red);
 	
 	for (std::vector<geometry::Line>::const_iterator it = boundingBox.edges().begin(); it != boundingBox.edges().end(); ++it) {
 		const geometry::Line& line = *it;
 		
-		painter.drawLine(
-			line.startPoint().x() * zf,
-			line.startPoint().y() * zf,
-			line.endPoint().x() * zf,
-			line.endPoint().y() * zf
-		);
+		boundingPath.moveTo(line.startPoint().x(), line.startPoint().y());
+		boundingPath.lineTo(line.endPoint().x(), line.endPoint().y());
 	}
 }
 
@@ -116,7 +103,17 @@ void MainWindow::paintEvent(QPaintEvent* event)
 	QPainter painter(this);
 	
 	painter.fillRect(0, 0, width(), height(), Qt::white);
-	painter.drawPixmap(offset.x(), offset.y(), pixmap);
+	
+	double zf = zoomFactor();
+	
+	painter.translate(offset);
+	painter.scale(zf, zf);
+	
+	painter.setPen(Qt::black);
+	painter.drawPath(voronoiPath);
+	
+	painter.setPen(Qt::red);
+	painter.drawPath(boundingPath);
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent* event)
@@ -165,7 +162,6 @@ void MainWindow::wheelEvent(QWheelEvent* event)
 	
 	offset = (offset - event->pos()) / oldZoomFactor * zoomFactor() + event->pos();
 	
-	recacheVoronoiDiagram();
 	update();
 }
 

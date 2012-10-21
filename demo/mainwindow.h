@@ -30,7 +30,7 @@
 
 #include <QMainWindow>
 #include <QWidget>
-#include <QPixmap>
+#include <QPainterPath>
 #include <QPaintEvent>
 #include <QResizeEvent>
 #include <QMouseEvent>
@@ -47,7 +47,8 @@ class MainWindow
 	protected:
 		voronoi::VoronoiDiagram diagram;
 		geometry::ConvexPolygon boundingBox;
-		QPixmap pixmap;
+		QPainterPath voronoiPath;
+		QPainterPath boundingPath;
 		QPoint offset;
 		QPoint lastMousePosition;
 		bool dragging;
