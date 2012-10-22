@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), dragging(false), 
 	
 	setMouseTracking(true);
 	createVoronoiDiagram();
+	prepareRenderingObjects();
 	
 	zoomAnimation.setDuration(300);
 }
@@ -68,11 +69,9 @@ void MainWindow::createVoronoiDiagram()
 	diagram.initialize(sites);
 	
 	diagram.calculate();
-	
-	recacheVoronoiDiagram();
 }
 
-void MainWindow::recacheVoronoiDiagram()
+void MainWindow::prepareRenderingObjects()
 {
 	geometry::Rectangle boundingRect = boundingBox.boundingBox();
 	
@@ -81,6 +80,7 @@ void MainWindow::recacheVoronoiDiagram()
 	
 	for (std::map<VoronoiSite*, VoronoiCell*>::iterator it = diagram.cells().begin(); it != diagram.cells().end(); ++it) {
 		std::pair<VoronoiSite*, VoronoiCell*> pair = *it;
+		VoronoiSite* site = pair.first;
 		VoronoiCell* cell = pair.second;
 		
 		
@@ -89,6 +89,11 @@ void MainWindow::recacheVoronoiDiagram()
 			
 			voronoiPath.moveTo(line.startPoint().x(), line.startPoint().y());
 			voronoiPath.lineTo(line.endPoint().x(), line.endPoint().y());
+		}
+		
+		geometry::Point position = site->position();
+		if (boundingBox.contains(position)) {
+			sitesPath.addEllipse(QPointF(position.x(), position.y()), 1, 1);
 		}
 	}
 	
@@ -110,6 +115,10 @@ void MainWindow::paintEvent(QPaintEvent* event)
 	
 	painter.translate(offset());
 	painter.scale(zf, zf);
+	
+	painter.setPen(Qt::gray);
+	painter.setBrush(Qt::gray);
+	painter.drawPath(sitesPath);	
 	
 	painter.setPen(Qt::black);
 	painter.drawPath(voronoiPath);

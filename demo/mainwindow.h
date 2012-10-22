@@ -52,6 +52,7 @@ class MainWindow
 		voronoi::VoronoiDiagram diagram;
 		geometry::ConvexPolygon boundingBox;
 		QPainterPath voronoiPath;
+		QPainterPath sitesPath;
 		QPainterPath boundingPath;
 		QPoint lastMousePosition;
 		bool dragging;
@@ -71,7 +72,7 @@ class MainWindow
 		void wheelEvent(QWheelEvent* event);
 		
 		void createVoronoiDiagram();
-		void recacheVoronoiDiagram();
+		void prepareRenderingObjects();
 		QList<QPoint> getSites();
 		QSize sizeHint() const;
 	protected slots:
