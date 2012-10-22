@@ -52,6 +52,7 @@ class MainWindow
 		voronoi::VoronoiDiagram diagram;
 		geometry::ConvexPolygon boundingBox;
 		QPainterPath voronoiPath;
+		QPainterPath halfEdgesDebugPath; //remove later
 		QPainterPath sitesPath;
 		QPainterPath boundingPath;
 		QPoint lastMousePosition;

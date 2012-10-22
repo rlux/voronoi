@@ -116,7 +116,7 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 	checkForCircleEvent(newArc->prev());
 	checkForCircleEvent(newArc->next());
 }
-
+#include <iostream>
 void Fortune::handleCircleEvent(CircleEvent* event)
 {
 	if (!event->isValid()) return;
@@ -126,21 +126,33 @@ void Fortune::handleCircleEvent(CircleEvent* event)
 	Arc* next = arc->next();
 	VoronoiEdge* leftEdge = arc->leftEdge();
 	VoronoiEdge* rightEdge = arc->rightEdge();
-	Point s = event->circle().center();
+	Point centerPoint = event->circle().center();
 	
 	VoronoiEdge* newEdge = diagram->createEdge(prev->site(), next->site());
-	newEdge->adjustOrientation(arc->site()->position());
-	newEdge->addPoint(s);
 	
-	if (leftEdge) {
-		leftEdge->adjustOrientation(next->site()->position());
-		leftEdge->addPoint(s);
-	}
-	if (rightEdge) {
-		rightEdge->adjustOrientation(prev->site()->position());
-		rightEdge->addPoint(s);
-	}
-		
+	newEdge->adjustOrientation(arc->site()->position());
+	newEdge->addPoint(centerPoint);
+	
+	leftEdge->adjustOrientation(next->site()->position());
+	leftEdge->addPoint(centerPoint);
+	
+	rightEdge->adjustOrientation(prev->site()->position());
+	rightEdge->addPoint(centerPoint);
+	
+	// connect half edges
+	VoronoiHalfEdge* he = leftEdge->halfEdgeFor(arc->site());
+	he->setStartPoint(centerPoint);
+	he->setPrev(rightEdge->halfEdgeFor(arc->site()));
+	
+	he = rightEdge->halfEdgeFor(next->site());
+	he->setStartPoint(centerPoint);
+	he->setPrev(newEdge->halfEdgeFor(next->site()));
+	
+	he = newEdge->halfEdgeFor(prev->site());
+	he->setStartPoint(centerPoint);
+	he->setPrev(leftEdge->halfEdgeFor(prev->site()));
+	
+	
 	beachLine.replaceArc(arc, newEdge);
 	
 	checkForCircleEvent(prev);

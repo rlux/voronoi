@@ -34,14 +34,19 @@
 #include <VoronoiSite.h>
 
 namespace voronoi {
+	
+class VoronoiHalfEdge;
 
 class VoronoiEdge
 {
 public:
 	VoronoiEdge(VoronoiSite* left, VoronoiSite* right);
+	~VoronoiEdge();
 
 	void addPoint(const geometry::Point& point);
 	void adjustOrientation(const geometry::Point& awayPoint);
+
+	VoronoiHalfEdge* halfEdgeFor(VoronoiSite* site);
 
 	geometry::Line getRenderLine(const geometry::Rectangle& boundingBox) const;
 	geometry::Line getRenderLine(const geometry::ConvexPolygon& boundingPolygon) const;
@@ -50,6 +55,36 @@ protected:
 	VoronoiSite* right;
 
 	geometry::Line line;
+
+	VoronoiHalfEdge* halfEdge1;
+	VoronoiHalfEdge* halfEdge2;
+};
+
+class VoronoiHalfEdge
+{
+public:
+	VoronoiHalfEdge(VoronoiSite* site);
+
+	VoronoiSite* site() const;
+	VoronoiHalfEdge* opposite() const;
+	VoronoiHalfEdge* next() const;
+	VoronoiHalfEdge* prev() const;
+	geometry::Point startPoint() const;
+	bool hasStartPoint() const;
+
+	void setStartPoint(const geometry::Point& point);
+	void setOpposite(VoronoiHalfEdge* opposite);
+	void setNext(VoronoiHalfEdge* next);
+	void setPrev(VoronoiHalfEdge* prev);
+
+	VoronoiHalfEdge* begin();
+protected:
+	VoronoiHalfEdge* _opposite;
+	VoronoiHalfEdge* _next;
+	VoronoiHalfEdge* _prev;
+	VoronoiSite* _site;
+	geometry::Point _startPoint;
+	bool _hasStart;
 };
 
 } //end namespace voronoi

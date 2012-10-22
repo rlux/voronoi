@@ -95,6 +95,21 @@ void MainWindow::prepareRenderingObjects()
 		if (boundingBox.contains(position)) {
 			sitesPath.addEllipse(QPointF(position.x(), position.y()), 1, 1);
 		}
+		
+		//halfEdgesDebugPath
+		
+		/*VoronoiHalfEdge* begin = cell->edges[0]->halfEdgeFor(site)->begin();
+		geometry::Point p = begin->startPoint();
+		halfEdgesDebugPath.moveTo(p.x(), p.y());
+		VoronoiHalfEdge* he = begin;
+		while (he->next()) {
+			he = he->next();
+			p = he->startPoint();
+			halfEdgesDebugPath.lineTo(p.x(), p.y());
+			if (he==begin) break;
+		}*/
+		
+		// halfEdgesDebugPath end
 	}
 	
 	for (std::vector<geometry::Line>::const_iterator it = boundingBox.edges().begin(); it != boundingBox.edges().end(); ++it) {
@@ -119,12 +134,16 @@ void MainWindow::paintEvent(QPaintEvent* event)
 	painter.setPen(Qt::gray);
 	painter.setBrush(Qt::gray);
 	painter.drawPath(sitesPath);	
+	painter.setBrush(Qt::transparent);
 	
 	painter.setPen(Qt::black);
 	painter.drawPath(voronoiPath);
 	
 	painter.setPen(Qt::red);
 	painter.drawPath(boundingPath);
+	
+	painter.setPen(Qt::red);
+	painter.drawPath(halfEdgesDebugPath);
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent* event)
