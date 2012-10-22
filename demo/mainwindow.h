@@ -36,11 +36,15 @@
 #include <QMouseEvent>
 #include <QList>
 #include <QPoint>
+#include <QPropertyAnimation>
+#include <QVariant>
 
 class MainWindow
 : public QMainWindow
 {
 	Q_OBJECT;
+	
+	Q_PROPERTY(float zoomLevel READ zoomLevel WRITE setZoomLevel);
 
 	public:
 		MainWindow(QWidget* parent = 0);
@@ -49,12 +53,16 @@ class MainWindow
 		geometry::ConvexPolygon boundingBox;
 		QPainterPath voronoiPath;
 		QPainterPath boundingPath;
-		QPoint offset;
 		QPoint lastMousePosition;
 		bool dragging;
-		int zoomLevel;
-	
+		QPoint _offset;
+		float _zoomLevel;
+		QPropertyAnimation zoomAnimation;
+		
 		float zoomFactor();
+		float zoomFactor(float level);
+		float zoomLevel();
+		QPoint offset();
 		
 		void paintEvent(QPaintEvent* event);
 		void mouseMoveEvent(QMouseEvent* event);
@@ -66,4 +74,8 @@ class MainWindow
 		void recacheVoronoiDiagram();
 		QList<QPoint> getSites();
 		QSize sizeHint() const;
+	protected slots:
+		void setZoomLevel(float level);
+		void setZoomLevel(const QVariant& level);
+		void setOffset(const QPoint& point);
 };

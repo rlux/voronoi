@@ -28,11 +28,12 @@
 
 #include <QPainter>
 #include <QtGlobal>
-#include <cmath>
+#include <QPropertyAnimation>
+#include <qmath.h>
 
 using namespace voronoi;
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), dragging(false), zoomLevel(0)
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), dragging(false), _zoomLevel(0), zoomAnimation(this, "zoomLevel")
 {
 	qsrand(1000); // static number to initialize rng
 	
@@ -47,6 +48,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), dragging(false), 
 	
 	setMouseTracking(true);
 	createVoronoiDiagram();
+	
+	zoomAnimation.setDuration(300);
 }
 
 void MainWindow::createVoronoiDiagram()
@@ -72,7 +75,6 @@ void MainWindow::createVoronoiDiagram()
 void MainWindow::recacheVoronoiDiagram()
 {
 	geometry::Rectangle boundingRect = boundingBox.boundingBox();
-	float zf = zoomFactor();
 	
 	voronoiPath = QPainterPath();
 	boundingPath = QPainterPath();
@@ -106,7 +108,7 @@ void MainWindow::paintEvent(QPaintEvent* event)
 	
 	double zf = zoomFactor();
 	
-	painter.translate(offset);
+	painter.translate(offset());
 	painter.scale(zf, zf);
 	
 	painter.setPen(Qt::black);
@@ -119,9 +121,9 @@ void MainWindow::paintEvent(QPaintEvent* event)
 void MainWindow::mouseMoveEvent(QMouseEvent* event)
 {
 	if (dragging) {
-		offset += event->pos()-lastMousePosition;
+		setOffset(offset() + event->pos()-lastMousePosition);
 		lastMousePosition = event->pos();
-		update();
+		repaint();
 	}
 }
 
@@ -142,27 +144,38 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event)
 
 void MainWindow::wheelEvent(QWheelEvent* event)
 {
-	float oldZoomFactor = zoomFactor();
-	
-	if (event->delta() > 0) {
-		if (zoomLevel >= 10) {
-			return;
-		}
-		
-		zoomLevel++;
-		
-		
-	} else {
-		if (zoomLevel <= -10) {
-			return;
-		}
-		
-		zoomLevel--;
+	float oldZoomLevel = zoomLevel();
+	if (zoomAnimation.state() == QAbstractAnimation::Running && !zoomAnimation.endValue().isNull()) {
+		oldZoomLevel = zoomAnimation.endValue().toFloat();
 	}
 	
-	offset = (offset - event->pos()) / oldZoomFactor * zoomFactor() + event->pos();
+	float newZoomLevel = 0.f;
 	
-	update();
+	if (event->delta() > 0) {
+		if (oldZoomLevel >= 10) {
+			return;
+		}
+		
+		newZoomLevel = qMin(10.f, oldZoomLevel+1);
+	} else {
+		if (oldZoomLevel <= -10) {
+			return;
+		}
+		
+		newZoomLevel = qMax(-10.f, oldZoomLevel-1);
+	}
+	
+	if (zoomAnimation.state() == QAbstractAnimation::Running) {
+		zoomAnimation.stop();
+		zoomAnimation.setStartValue(zoomAnimation.currentValue());
+	} else {
+		zoomAnimation.setStartValue(oldZoomLevel);
+		
+		lastMousePosition = event->pos();
+	}
+	
+	zoomAnimation.setEndValue(newZoomLevel);
+	zoomAnimation.start();
 }
 
 QList<QPoint> MainWindow::getSites()
@@ -183,5 +196,39 @@ QSize MainWindow::sizeHint() const
 
 float MainWindow::zoomFactor()
 {
-	return pow(1.3, zoomLevel);
+	return zoomFactor(zoomLevel());
+}
+
+float MainWindow::zoomFactor(float level)
+{
+	return qPow(1.3, level);
+}
+
+float MainWindow::zoomLevel()
+{
+	return _zoomLevel;
+}
+
+void MainWindow::setZoomLevel(float level)
+{
+	_offset = (offset() - lastMousePosition) / zoomFactor(_zoomLevel) * zoomFactor(level) + lastMousePosition;
+	
+	_zoomLevel = level;
+	
+	repaint();
+}
+
+void MainWindow::setZoomLevel(const QVariant& level)
+{
+	setZoomLevel(level.toFloat());
+}
+
+QPoint MainWindow::offset()
+{
+	return _offset;
+}
+
+void MainWindow::setOffset(const QPoint& point)
+{
+	_offset = point;
 }
