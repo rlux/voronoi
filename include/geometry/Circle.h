@@ -41,6 +41,11 @@ public:
 	real radius() const;
 
 	bool contains(const Point& p) const;
+
+	Point top() const;
+	Point bottom() const;
+	Point left() const;
+	Point right() const;
 protected:
 	Point _center;
 	real _radius;

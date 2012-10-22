@@ -80,16 +80,16 @@ bool Arc::hasTwoDifferentNeighborSites() const
 	return _prev && _next && _prev->_site != _next->_site;
 }
 
-void Arc::invalidateEvent()
+void Arc::invalidateCircleEvent()
 {
 	if (!_event) return;
 	_event->invalidate();
 	_event = 0;
 }
 
-void Arc::resetEvent(CircleEvent* event)
+void Arc::resetCircleEvent(CircleEvent* event)
 {
-	invalidateEvent();
+	invalidateCircleEvent();
 	_event = event;
 }
 

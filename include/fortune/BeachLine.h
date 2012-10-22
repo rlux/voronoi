@@ -44,7 +44,7 @@ public:
 	void insertAfter(Arc* newArc, Arc* after);
 	void splitArcWith(Arc* arc, Arc* newArc);
 
-	Arc* arcFor(const geometry::Point& p) const;
+	Arc* arcAbove(const geometry::Point& point) const;
 	void replaceArc(Arc* arc, VoronoiEdge* edge);
 	Arc* lastElement() const;
 private:

@@ -43,26 +43,48 @@ void Fortune::operator()(VoronoiDiagram& diagram)
 }
 
 void Fortune::calculate()
-{
-	if (!diagram) {
-		return;
-	}
-	
-	sweepPos = 0;
-	
-	for (std::vector<VoronoiSite*>::iterator it = diagram->sites().begin(); it != diagram->sites().end(); ++it) {
-		addEvent(new SiteEvent(*it));
-	}
+{	
+	addEventsFor(diagram->sites());
 	
 	while (Event* event = nextEvent()) {
-		sweepPos = event->position().y(); //TODO: move sweepPos to beachline?
-		if (event->isSiteEvent()) {
-			handleSiteEvent(event->asSiteEvent());
-		} else {
-			handleCircleEvent(event->asCircleEvent());
-		}
+		processEvent(event);
 		delete event;
 	}
+}
+
+void Fortune::processEvent(Event* event)
+{
+	sweepLineY = event->position().y();
+	
+	if (event->isSiteEvent()) {
+		handleSiteEvent(event->asSiteEvent());
+	} else {
+		handleCircleEvent(event->asCircleEvent());
+	}
+}
+
+void Fortune::addEventsFor(std::vector<VoronoiSite*>& sites)
+{
+	for (std::vector<VoronoiSite*>::iterator it = sites.begin(); it != sites.end(); ++it) {
+		addEvent(new SiteEvent(*it));
+	}
+}
+
+void Fortune::addEvent(Event* event)
+{
+	eventQueue.push(event);
+}
+
+Event* Fortune::nextEvent()
+{
+	if (eventQueue.empty()) {
+		return 0;
+	}
+	
+	Event* event = eventQueue.top();
+	eventQueue.pop();
+	
+	return event;
 }
 
 void Fortune::handleSiteEvent(SiteEvent* event)
@@ -76,10 +98,10 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 		return;
 	}
 	
-	Arc* arc = beachLine.arcFor(site->position());
+	Arc* arc = beachLine.arcAbove(site->position());
 	
 	if (arc) {
-		arc->invalidateEvent();
+		arc->invalidateCircleEvent();
 		newArc->setLeftEdge(diagram->createEdge(arc->site(), site));
 		
 		beachLine.splitArcWith(arc, newArc);
@@ -128,7 +150,7 @@ void Fortune::handleCircleEvent(CircleEvent* event)
 void Fortune::checkForCircleEvent(Arc* arc)
 {
 	if (!arc) return;
-	arc->invalidateEvent();
+	arc->invalidateCircleEvent();
 	
 	if (!arc->hasTwoDifferentNeighborSites()) return;
 	
@@ -140,27 +162,11 @@ void Fortune::checkForCircleEvent(Arc* arc)
 	
 	Circle circle(a, b, c);
 	
-	if (circle.center().y()-circle.radius() > sweepPos) {
+	if (circle.top().y() > sweepLineY) {
 		return;
 	}
 
 	addEvent(new CircleEvent(arc, circle));
 }
 
-Event* Fortune::nextEvent()
-{
-	if (eventQueue.empty()) {
-		return 0;
-	}
-	
-	Event* event = eventQueue.top();
-	eventQueue.pop();
-	
-	return event;
-}
-
-void Fortune::addEvent(Event* event)
-{
-	eventQueue.push(event);
-}
 

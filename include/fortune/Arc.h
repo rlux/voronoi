@@ -53,8 +53,8 @@ public:
 
 	void setLeftEdge(VoronoiEdge* leftEdge); //TODO: avoid public call
 
-	void invalidateEvent();
-	void resetEvent(CircleEvent* event);
+	void invalidateCircleEvent();
+	void resetCircleEvent(CircleEvent* event);
 
 	bool hasTwoDifferentNeighborSites() const;
 protected:

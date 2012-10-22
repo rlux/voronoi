@@ -70,3 +70,22 @@ bool Circle::contains(const Point& p) const
 	return (_center-p).squaredLength()<=_radius*_radius;
 }
 
+Point Circle::top() const
+{
+	return Point(_center.x(), _center.y() - _radius);
+}
+
+Point Circle::bottom() const
+{
+	return Point(_center.x(), _center.y() + _radius);
+}
+
+Point Circle::left() const
+{
+	return Point(_center.x() - _radius, _center.y());
+}
+
+Point Circle::right() const
+{
+	return Point(_center.x() + _radius, _center.y());
+}

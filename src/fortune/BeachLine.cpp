@@ -76,24 +76,26 @@ void BeachLine::splitArcWith(Arc* arc, Arc* newArc)
 	insertAfter(newArc, arc);
 }
 
-Arc* BeachLine::arcFor(const Point& p) const
+Arc* BeachLine::arcAbove(const Point& point) const
 {
+	real baselineY = point.y();
+	
 	for (Arc* arc=_firstElement; arc; arc=arc->next()) {
 		if (!arc->next()) {
-			if (arc->site()->position().y()==p.y()) return 0;
+			if (arc->site()->position().y()==point.y()) return 0;
 			return arc;
 		}
 		
 		bool left = arc->site()->position().y()>arc->next()->site()->position().y();
 		
-		ParabolaIntersectionSolutionSet solutionSet = arc->parabola(p.y()).intersection(arc->next()->parabola(p.y()));
+		ParabolaIntersectionSolutionSet solutionSet = arc->parabola(baselineY).intersection(arc->next()->parabola(baselineY));
 		if (solutionSet.isEmpty() || solutionSet.isInfinite()) {
 			continue;
 		}
 
 		Point intersection = left ? solutionSet.leftPoint() : solutionSet.rightPoint();
 
-		if (p.x()<=intersection.x()) {
+		if (point.x()<=intersection.x()) {
 			return arc;
 		}
 	}

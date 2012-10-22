@@ -47,12 +47,15 @@ private:
 
 	std::priority_queue<Event*, std::vector<Event*>, EventComparator> eventQueue;
 	BeachLine beachLine;
-	geometry::real sweepPos;
+	geometry::real sweepLineY;
 
 	void calculate();
+	void addEventsFor(std::vector<VoronoiSite*>& sites);
 
-	Event* nextEvent();
 	void addEvent(Event* event);
+	Event* nextEvent();
+
+	void processEvent(Event* event);
 
 	void handleSiteEvent(SiteEvent* event);
 	void handleCircleEvent(CircleEvent* event);
