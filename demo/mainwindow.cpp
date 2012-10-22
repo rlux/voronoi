@@ -124,8 +124,6 @@ void MainWindow::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(this);
 	
-	painter.fillRect(0, 0, width(), height(), Qt::white);
-	
 	double zf = zoomFactor();
 	
 	painter.translate(offset());
