@@ -213,7 +213,7 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
 	if (event->key()==Qt::Key_Space) {
 		if (fortune.step()) {
 			prepareRenderingObjects();
-			update();
+			repaint();
 		}
 	}
 }

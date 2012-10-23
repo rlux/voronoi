@@ -55,11 +55,19 @@ real Fortune::getSweepLineY() const
 
 bool Fortune::step()
 {
+	static int siteEventCounter = 0;
 	while (Event* event = nextEvent()) {
-		bool wasCircle = event->isCircleEvent();
+		bool wasSite = event->isSiteEvent();
 		processEvent(event);
 		delete event;
-		if (wasCircle) return true;
+		if (siteEventCounter>=diagram->sites().size()) {
+			calculate();
+			return true;
+		}
+		if (wasSite) {
+			siteEventCounter++;
+			return true;
+		}
 	}
 	return false;
 }
@@ -136,7 +144,7 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 	checkForCircleEvent(newArc->prev());
 	checkForCircleEvent(newArc->next());
 }
-#include <iostream>
+
 void Fortune::handleCircleEvent(CircleEvent* event)
 {
 	if (!event->isValid()) return;
