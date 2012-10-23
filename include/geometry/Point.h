@@ -70,5 +70,6 @@ private:
 Point operator*(real factor, const Point& p);
 
 bool clockwise(const Point& a, const Point& b, const Point& c);
+bool pointsOnLine(const Point& a, const Point& b, const Point& c);
 
 } //end namespace geometry

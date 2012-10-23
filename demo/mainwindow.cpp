@@ -208,9 +208,12 @@ QList<QPoint> MainWindow::getSites()
 {
 	QList<QPoint> sites;
 	
-	for (unsigned i=0; i < 1000; ++i) {
+	for (unsigned i=0; i < 4000; ++i) {
 		sites << QPoint(qrand() % 1280, qrand() % 720);
 	}
+	
+	//sites << QPoint(250, 200) << QPoint(150, 200) << QPoint(200, 200);
+	//sites << QPoint(201, 200) << QPoint(150, 200) << QPoint(200, 200) << QPoint(300, 250) << QPoint(400, 500);
 	
 	return sites;
 }

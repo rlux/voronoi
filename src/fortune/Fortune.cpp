@@ -170,7 +170,15 @@ void Fortune::checkForCircleEvent(Arc* arc)
 	Point b = arc->next()->site()->position();
 	Point c = arc->site()->position();
 	
-	if (clockwise(a, b, c)) return;
+	if (pointsOnLine(a, b, c)) {
+		if (a.x() >= b.x() && b.x() >= c.x()) {
+			
+		} else {
+			return;
+		}
+	} else {
+		if (clockwise(a, b, c)) return;
+	}
 	
 	Circle circle(a, b, c);
 	

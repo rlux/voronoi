@@ -147,3 +147,11 @@ bool geometry::clockwise(const Point& a, const Point& b, const Point& c)
 	
 	return ab.x()*bc.y()-ab.y()*bc.x()<0;
 }
+
+bool geometry::pointsOnLine(const Point& a, const Point& b, const Point& c)
+{
+	Vector ab = b-a;
+	Vector bc = c-b;
+	
+	return ab.x()*bc.y()-ab.y()*bc.x()==0;
+}
