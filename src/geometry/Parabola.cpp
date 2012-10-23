@@ -110,7 +110,7 @@ ParabolaIntersectionSolutionSet Parabola::intersection(const Parabola& parabola)
 	} else if (a2==0) { // second parabola lies on baseline -> degenerates to point
 		x = h2;
 	} else { // two intersection points
-		real p = 2*(h2*a1-h1*a2)/(a2-a1);
+		/*real p = 2*(h2*a1-h1*a2)/(a2-a1);
 		real q = (4*a1*a2*(k1-k2)+h1*h1*a2-h2*h2*a1)/(a2-a1);
 		real D = p*p/4-q;
 		
@@ -119,6 +119,19 @@ ParabolaIntersectionSolutionSet Parabola::intersection(const Parabola& parabola)
 		x = -p/2-sqrtD;
 		real x2 = -p/2+sqrtD;
 
+		return ParabolaIntersectionSolutionSet(at(x), at(x2));*/
+		
+		real A = a2-a1;
+		real B = 2*(a1*h2-a2*h1);
+		real C = a2*(h1*h1+4*a1*k1)-a1*(h2*h2+4*a2*k2);
+		
+		real q = B>0
+			? (B+std::sqrt(B*B-4*A*C))/-2
+			: (-B+std::sqrt(B*B-4*A*C))/2;
+		
+		x = q/A;
+		real x2 = C/q;
+		
 		return ParabolaIntersectionSolutionSet(at(x), at(x2));
 	}
 	
