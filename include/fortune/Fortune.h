@@ -41,7 +41,13 @@ class Fortune
 public:
 	Fortune();
 
-	void operator()(VoronoiDiagram& diagram);
+	void operator()(VoronoiDiagram* diagram);
+	
+	void initialize(VoronoiDiagram* diagram);
+	void calculate();
+	bool step();
+
+	geometry::real getSweepLineY() const;
 private:
 	VoronoiDiagram* diagram;
 
@@ -49,7 +55,6 @@ private:
 	BeachLine beachLine;
 	geometry::real sweepLineY;
 
-	void calculate();
 	void addEventsFor(std::vector<VoronoiSite*>& sites);
 
 	void addEvent(Event* event);
@@ -61,6 +66,8 @@ private:
 	void handleCircleEvent(CircleEvent* event);
 
 	void checkForCircleEvent(Arc* arc);
+
+	VoronoiEdge* createEdgeBetween(VoronoiSite* site1, VoronoiSite* site2);
 };
 
 } //end namespace fortune

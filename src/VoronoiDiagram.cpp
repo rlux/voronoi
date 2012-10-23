@@ -96,7 +96,7 @@ void VoronoiDiagram::initialize(const std::vector<VoronoiSite*>& sites)
 void VoronoiDiagram::calculate()
 {
 	fortune::Fortune fortune;
-	fortune(*this);
+	fortune(this);
 }
 
 VoronoiEdge* VoronoiDiagram::createEdge(VoronoiSite* left, VoronoiSite* right)

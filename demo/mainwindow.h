@@ -27,6 +27,7 @@
 #pragma once
 
 #include <voronoi.h>
+#include <fortune/Fortune.h>
 
 #include <QMainWindow>
 #include <QWidget>
@@ -50,6 +51,7 @@ class MainWindow
 		MainWindow(QWidget* parent = 0);
 	protected:
 		voronoi::VoronoiDiagram diagram;
+		voronoi::fortune::Fortune fortune;
 		geometry::ConvexPolygon boundingBox;
 		QPainterPath voronoiPath;
 		QPainterPath halfEdgesDebugPath; //remove later
@@ -71,6 +73,7 @@ class MainWindow
 		void mousePressEvent(QMouseEvent* event);
 		void mouseReleaseEvent(QMouseEvent* event);
 		void wheelEvent(QWheelEvent* event);
+		void keyPressEvent(QKeyEvent* event);
 		
 		void createVoronoiDiagram();
 		void prepareRenderingObjects();

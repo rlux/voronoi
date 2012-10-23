@@ -30,22 +30,42 @@ using namespace voronoi;
 using namespace voronoi::fortune;
 using namespace geometry;
 
-Fortune::Fortune()
-: diagram(0)
+Fortune::Fortune() : diagram(0), sweepLineY(0)
 {
 }
 
-void Fortune::operator()(VoronoiDiagram& diagram)
+void Fortune::operator()(VoronoiDiagram* diagram)
 {
-	this->diagram = &diagram;
+	initialize(diagram);
 	calculate();
 	this->diagram = 0;
 }
 
+void Fortune::initialize(VoronoiDiagram* diagram)
+{
+	this->diagram = diagram;
+	while (Event* event = nextEvent()) delete event;
+	addEventsFor(diagram->sites());
+}
+
+real Fortune::getSweepLineY() const
+{
+	return sweepLineY;
+}
+
+bool Fortune::step()
+{
+	while (Event* event = nextEvent()) {
+		bool wasCircle = event->isCircleEvent();
+		processEvent(event);
+		delete event;
+		if (wasCircle) return true;
+	}
+	return false;
+}
+
 void Fortune::calculate()
 {	
-	addEventsFor(diagram->sites());
-	
 	while (Event* event = nextEvent()) {
 		processEvent(event);
 		delete event;
@@ -102,13 +122,13 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 	
 	if (arc) {
 		arc->invalidateCircleEvent();
-		newArc->setLeftEdge(diagram->createEdge(arc->site(), site));
+		newArc->setLeftEdge(createEdgeBetween(arc->site(), site));
 		
 		beachLine.splitArcWith(arc, newArc);
 		//arc->splitWith(newArc);
 	} else {
 		Arc* last = beachLine.lastElement();
-		newArc->setLeftEdge(diagram->createEdge(last->site(), site));
+		newArc->setLeftEdge(createEdgeBetween(last->site(), site));
 		//last->insert(newArc);
 		beachLine.insertAfter(newArc, last);
 	}
@@ -128,7 +148,7 @@ void Fortune::handleCircleEvent(CircleEvent* event)
 	VoronoiEdge* rightEdge = arc->rightEdge();
 	Point centerPoint = event->circle().center();
 	
-	VoronoiEdge* newEdge = diagram->createEdge(prev->site(), next->site());
+	VoronoiEdge* newEdge = createEdgeBetween(prev->site(), next->site());
 	
 	newEdge->adjustOrientation(arc->site()->position());
 	newEdge->addPoint(centerPoint);
@@ -158,7 +178,7 @@ void Fortune::handleCircleEvent(CircleEvent* event)
 	checkForCircleEvent(prev);
 	checkForCircleEvent(next);
 }
-
+#include <iostream>
 void Fortune::checkForCircleEvent(Arc* arc)
 {
 	if (!arc) return;
@@ -183,10 +203,15 @@ void Fortune::checkForCircleEvent(Arc* arc)
 	Circle circle(a, b, c);
 	
 	if (circle.top().y() > sweepLineY) {
-		return;
+		std::cout << "yes" << std::endl;
+		//return;
 	}
 
 	addEvent(new CircleEvent(arc, circle));
 }
 
+VoronoiEdge* Fortune::createEdgeBetween(VoronoiSite* site1, VoronoiSite* site2)
+{
+	return diagram->createEdge(site1, site2);
+}
 

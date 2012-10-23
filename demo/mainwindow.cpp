@@ -68,7 +68,8 @@ void MainWindow::createVoronoiDiagram()
 	
 	diagram.initialize(sites);
 	
-	diagram.calculate();
+	//diagram.calculate();
+	fortune.initialize(&diagram);
 }
 
 void MainWindow::prepareRenderingObjects()
@@ -142,6 +143,9 @@ void MainWindow::paintEvent(QPaintEvent* event)
 	
 	painter.setPen(Qt::red);
 	painter.drawPath(halfEdgesDebugPath);
+	
+	painter.setPen(Qt::green);
+	painter.drawLine(0, fortune.getSweepLineY(), width(), fortune.getSweepLineY());
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent* event)
@@ -204,11 +208,21 @@ void MainWindow::wheelEvent(QWheelEvent* event)
 	zoomAnimation.start();
 }
 
+void MainWindow::keyPressEvent(QKeyEvent* event)
+{
+	if (event->key()==Qt::Key_Space) {
+		if (fortune.step()) {
+			prepareRenderingObjects();
+			update();
+		}
+	}
+}
+
 QList<QPoint> MainWindow::getSites()
 {
 	QList<QPoint> sites;
 	
-	for (unsigned i=0; i < 4000; ++i) {
+	for (unsigned i=0; i < 1000/5; ++i) {
 		sites << QPoint(qrand() % 1280, qrand() % 720);
 	}
 	
