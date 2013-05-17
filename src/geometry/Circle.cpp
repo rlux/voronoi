@@ -55,7 +55,7 @@ Circle::Circle(const Point& a, const Point& b, const Point& c)
 	_radius = (_center-a).length();
 }
 
-Point Circle::center() const
+const Point& Circle::center() const
 {
 	return _center;
 }

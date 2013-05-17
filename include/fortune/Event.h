@@ -39,6 +39,8 @@ class CircleEvent;
 class Event
 {
 public:
+	virtual ~Event();
+	
 	virtual bool isSiteEvent() const;
 	virtual bool isCircleEvent() const;
 	SiteEvent* asSiteEvent() const;

@@ -51,10 +51,10 @@ public:
 	static Line ray(const Point& supportVector, const Vector& direction);
 	static Line segment(const Point& point1, const Point& point2);
 	
-	Point supportVector() const;
-	Point startPoint() const;
-	Vector direction() const;
-	Point endPoint() const;
+	const Point& supportVector() const;
+	const Point& startPoint() const;
+	const Vector& direction() const;
+	const Point& endPoint() const;
 	Type type() const;
 	
 	bool isNull() const;
@@ -71,7 +71,7 @@ public:
 	void invertDirection();
 	bool addPoint(const Point& point);
 
-	const LineIntersectionSolutionSet intersection(const Line& line) const;
+	LineIntersectionSolutionSet intersection(const Line& line) const;
 	Vector normal() const;
 	Line perpendicular(const Point& point) const;
 	
@@ -113,7 +113,7 @@ public:
 	bool isOne() const;
 	bool isInfinite() const;
 	
-	const Type& type() const;
+	Type type() const;
 	const Point& point() const;
 private:
 	Type _type;

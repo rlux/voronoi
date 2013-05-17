@@ -33,9 +33,9 @@ ConvexPolygon::ConvexPolygon()
 {
 }
 
-ConvexPolygon::ConvexPolygon(std::vector<Point> points)
+ConvexPolygon::ConvexPolygon(const std::vector<Point>& points)
 {
-	for (std::vector<Point>::iterator it = points.begin(); it != points.end(); ++it) {
+	for (std::vector<Point>::const_iterator it = points.begin(); it != points.end(); ++it) {
 		*this << *it;
 	}
 }
@@ -67,7 +67,7 @@ bool ConvexPolygon::contains(const Point& p) const
 	return true;
 }
 
-const PolygonIntersectionSolutionSet ConvexPolygon::intersection(const Line& line) const
+PolygonIntersectionSolutionSet ConvexPolygon::intersection(const Line& line) const
 {
 	bool containsStartPoint = (line.isSegment() || line.isRay()) && contains(line.startPoint());
 	bool containsEndPoint = line.isSegment() && contains(line.endPoint());
@@ -97,7 +97,7 @@ const PolygonIntersectionSolutionSet ConvexPolygon::intersection(const Line& lin
 	return result;
 }
 
-const Rectangle ConvexPolygon::boundingBox() const
+const Rectangle& ConvexPolygon::boundingBox() const
 {
 	return _boundingBox;
 }
@@ -131,7 +131,7 @@ bool ConvexPolygon::violatesConvexity(const Point& point) const
 	return clockwise(_points[0], _points[1], _points[2]) != clockwise(_points[_points.size()-2], _points[_points.size()-1], point);
 }
 
-const std::vector<Point> PolygonIntersectionSolutionSet::points() const
+std::vector<Point> PolygonIntersectionSolutionSet::points() const
 {
 	return std::vector<Point>(_points.begin(), _points.end());
 }

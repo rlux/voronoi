@@ -50,7 +50,7 @@ private:
 	geometry::real sweepLineY;
 
 	void calculate();
-	void addEventsFor(std::vector<VoronoiSite*>& sites);
+	void addEventsFor(const std::vector<VoronoiSite*>& sites);
 
 	void addEvent(Event* event);
 	Event* nextEvent();

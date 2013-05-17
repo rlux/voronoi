@@ -55,22 +55,22 @@ Line Line::forNormal(const Point& supportVector, const Vector& normal)
 	return Line::forDirection(supportVector, normal.perpendicular());
 }
 
-Point Line::supportVector() const
+const Point& Line::supportVector() const
 {
 	return _startPoint;
 }
 
-Point Line::startPoint() const
+const Point& Line::startPoint() const
 {
 	return _startPoint;
 }
 
-Vector Line::direction() const
+const Vector& Line::direction() const
 {
 	return _direction;
 }
 
-Point Line::endPoint() const
+const Point& Line::endPoint() const
 {
 	return _endPoint;
 }
@@ -150,7 +150,7 @@ bool Line::addPoint(const Point& point)
 	}
 }
 
-const LineIntersectionSolutionSet Line::intersection(const Line& line) const
+LineIntersectionSolutionSet Line::intersection(const Line& line) const
 {
 	real s;
 	real t;
@@ -299,7 +299,7 @@ bool LineIntersectionSolutionSet::isInfinite() const
 	return _type==INFINITE_SOLUTIONS;
 }
 
-const LineIntersectionSolutionSet::Type& LineIntersectionSolutionSet::type() const
+LineIntersectionSolutionSet::Type LineIntersectionSolutionSet::type() const
 {
 	return _type;
 }

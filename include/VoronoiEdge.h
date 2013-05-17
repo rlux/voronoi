@@ -69,7 +69,7 @@ public:
 	VoronoiHalfEdge* opposite() const;
 	VoronoiHalfEdge* next() const;
 	VoronoiHalfEdge* prev() const;
-	geometry::Point startPoint() const;
+	const geometry::Point& startPoint() const;
 	bool hasStartPoint() const;
 
 	void setStartPoint(const geometry::Point& point);

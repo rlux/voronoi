@@ -37,7 +37,7 @@ public:
 	VoronoiSite(const geometry::Point& position);
 	VoronoiSite(geometry::real x, geometry::real y);
 
-	geometry::Point position() const;
+	const geometry::Point& position() const;
 protected:
 	geometry::Point _position;
 };

@@ -63,9 +63,9 @@ void Fortune::processEvent(Event* event)
 	}
 }
 
-void Fortune::addEventsFor(std::vector<VoronoiSite*>& sites)
+void Fortune::addEventsFor(const std::vector<VoronoiSite*>& sites)
 {
-	for (std::vector<VoronoiSite*>::iterator it = sites.begin(); it != sites.end(); ++it) {
+	for (std::vector<VoronoiSite*>::const_iterator it = sites.begin(); it != sites.end(); ++it) {
 		addEvent(new SiteEvent(*it));
 	}
 }
@@ -116,7 +116,7 @@ void Fortune::handleSiteEvent(SiteEvent* event)
 	checkForCircleEvent(newArc->prev());
 	checkForCircleEvent(newArc->next());
 }
-#include <iostream>
+
 void Fortune::handleCircleEvent(CircleEvent* event)
 {
 	if (!event->isValid()) return;
@@ -188,5 +188,3 @@ void Fortune::checkForCircleEvent(Arc* arc)
 
 	addEvent(new CircleEvent(arc, circle));
 }
-
-

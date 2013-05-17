@@ -124,7 +124,7 @@ VoronoiHalfEdge* VoronoiHalfEdge::prev() const
 	return _prev;
 }
 
-geometry::Point VoronoiHalfEdge::startPoint() const
+const geometry::Point& VoronoiHalfEdge::startPoint() const
 {
 	return _startPoint;
 }

@@ -40,14 +40,14 @@ class ConvexPolygon
 {
 public:
 	ConvexPolygon();
-	ConvexPolygon(std::vector<Point> points);
+	ConvexPolygon(const std::vector<Point>& points);
 
 	const std::vector<Point>& points() const;
 	const std::vector<Line>& edges() const;
 	bool contains(const Point& p) const;
 	bool violatesConvexity(const Point& point) const;
-	const PolygonIntersectionSolutionSet intersection(const Line& line) const;
-	const Rectangle boundingBox() const;
+	PolygonIntersectionSolutionSet intersection(const Line& line) const;
+	const Rectangle& boundingBox() const;
 	
 	ConvexPolygon& operator<<(const Point& point);
 protected:
@@ -59,7 +59,7 @@ protected:
 class PolygonIntersectionSolutionSet
 {
 public:
-	const std::vector<Point> points() const;
+	std::vector<Point> points() const;
 	unsigned size() const;
 	void addPoint(const Point& point);
 protected:

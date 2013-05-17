@@ -37,7 +37,7 @@ public:
 	Circle(const Point& center, real radius);
 	Circle(const Point& a, const Point& b, const Point& c);
 
-	Point center() const;
+	const Point& center() const;
 	real radius() const;
 
 	bool contains(const Point& p) const;

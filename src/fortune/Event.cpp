@@ -30,6 +30,10 @@ using namespace voronoi;
 using namespace voronoi::fortune;
 using namespace geometry;
 
+Event::~Event()
+{
+}
+
 bool Event::isSiteEvent() const
 {
 	return false;
