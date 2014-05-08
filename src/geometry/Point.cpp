@@ -104,29 +104,31 @@ bool Point::operator!=(const Point& p) const
 
 bool Point::operator<(const Point& p) const
 {
-	return _x < p._x || _y < p._y;
+    return _x < p._x || (_x == p._x && _y < p._y);
 }
 
 bool Point::operator<=(const Point& p) const
 {
-	return _x <= p._x || _y <= p._y;
+    return *this == p || *this < p;
 }
 
 bool Point::operator>(const Point& p) const
 {
-	return _x > p._x || _y > p._y;
+    return !(*this <= p);
 }
 
 bool Point::operator>=(const Point& p) const
 {
-	return _x >= p._x || _y >= p._y;
+    return *this == p || *this > p;
 }
 
-real Point::x() const {
+real Point::x() const
+{
 	return _x;
 }
 
-real Point::y() const {
+real Point::y() const
+{
 	return _y;
 }
 
