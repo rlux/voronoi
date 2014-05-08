@@ -26,13 +26,15 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <geometry/Point.h>
 
 namespace geometry {
 	
 class ParabolaIntersectionSolutionSet;
 
-class Parabola
+class VORONOI_API Parabola
 {
 public:
 	Parabola();
@@ -61,7 +63,7 @@ protected:
 	Point _vertex;
 };
 
-class ParabolaIntersectionSolutionSet
+class VORONOI_API ParabolaIntersectionSolutionSet
 {
 public:
 	enum Type {

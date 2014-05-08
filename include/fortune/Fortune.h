@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <vector>
 #include <queue>
 
@@ -36,7 +38,7 @@
 namespace voronoi {
 namespace fortune {
 
-class Fortune
+class VORONOI_API Fortune
 {
 public:
 	Fortune();

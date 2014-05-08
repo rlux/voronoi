@@ -26,11 +26,12 @@
 
 #pragma once
 
+#include <voronoi_api.h>
 #include <geometry/Point.h>
 
 namespace voronoi {
 
-class VoronoiSite
+class VORONOI_API VoronoiSite
 {
 public:
 	VoronoiSite();

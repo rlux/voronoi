@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <geometry/Point.h>
 #include <geometry/Line.h>
 #include <geometry/Rectangle.h>
@@ -36,7 +38,7 @@ namespace geometry {
 
 class PolygonIntersectionSolutionSet;
 
-class ConvexPolygon
+class VORONOI_API ConvexPolygon
 {
 public:
 	ConvexPolygon();
@@ -56,7 +58,7 @@ protected:
 	Rectangle _boundingBox;
 };
 
-class PolygonIntersectionSolutionSet
+class VORONOI_API PolygonIntersectionSolutionSet
 {
 public:
 	std::vector<Point> points() const;

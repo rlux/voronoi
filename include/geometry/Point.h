@@ -26,11 +26,13 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <geometry/Vector.h>
 
 namespace geometry {
 
-class Point
+class VORONOI_API Point
 {
 public:
 	Point();
@@ -67,9 +69,9 @@ private:
 	real _y;
 };
 
-Point operator*(real factor, const Point& p);
+VORONOI_API Point operator*(real factor, const Point& p);
 
-bool clockwise(const Point& a, const Point& b, const Point& c);
-bool pointsOnLine(const Point& a, const Point& b, const Point& c);
+VORONOI_API bool clockwise(const Point& a, const Point& b, const Point& c);
+VORONOI_API bool pointsOnLine(const Point& a, const Point& b, const Point& c);
 
 } //end namespace geometry

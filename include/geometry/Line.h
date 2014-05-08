@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <geometry/Point.h>
 #include <geometry/Vector.h>
 
@@ -33,7 +35,7 @@ namespace geometry {
 	
 class LineIntersectionSolutionSet;
 
-class Line
+class VORONOI_API Line
 {
 public:
 	enum Type {
@@ -94,7 +96,7 @@ protected:
 	real coefficientForPointOnLine(const Point& p) const;
 };
 
-class LineIntersectionSolutionSet
+class VORONOI_API LineIntersectionSolutionSet
 {
 public:
 	enum Type {

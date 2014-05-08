@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <geometry/Point.h>
 #include <geometry/Line.h>
 #include <geometry/Rectangle.h>
@@ -37,7 +39,7 @@ namespace voronoi {
 	
 class VoronoiHalfEdge;
 
-class VoronoiEdge
+class VORONOI_API VoronoiEdge
 {
 public:
 	VoronoiEdge(VoronoiSite* left, VoronoiSite* right);
@@ -60,7 +62,7 @@ protected:
 	VoronoiHalfEdge* halfEdge2;
 };
 
-class VoronoiHalfEdge
+class VORONOI_API VoronoiHalfEdge
 {
 public:
 	VoronoiHalfEdge(VoronoiSite* site);

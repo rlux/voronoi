@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <vector>
 #include <map>
 
@@ -35,7 +37,7 @@
 
 namespace voronoi {
 
-class VoronoiDiagram
+class VORONOI_API VoronoiDiagram
 {
 public:
 	VoronoiDiagram();

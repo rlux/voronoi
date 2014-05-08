@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <VoronoiSite.h>
 #include <fortune/Arc.h>
 #include <geometry/Circle.h>
@@ -36,7 +38,7 @@ namespace fortune {
 class SiteEvent;
 class CircleEvent;
 
-class Event
+class VORONOI_API Event
 {
 public:
 	virtual ~Event();
@@ -50,7 +52,7 @@ public:
 	bool operator<(const Event& event) const;
 };
 
-class SiteEvent : public Event
+class VORONOI_API SiteEvent : public Event
 {
 public:
 	SiteEvent(VoronoiSite* site);
@@ -63,7 +65,7 @@ private:
 	VoronoiSite* _site;
 };
 	
-class CircleEvent : public Event
+class VORONOI_API CircleEvent : public Event
 {
 public:
 	CircleEvent(Arc* arc, geometry::Circle circle);
@@ -81,7 +83,7 @@ private:
 	bool valid;
 };
 
-class EventComparator
+class VORONOI_API EventComparator
 {
 public:
 	bool operator()(Event* event1, Event* event2);

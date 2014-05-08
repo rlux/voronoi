@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <VoronoiSite.h>
 #include <VoronoiEdge.h>
 #include <geometry/Parabola.h>
@@ -36,7 +38,7 @@ namespace fortune {
 class CircleEvent;
 class BeachLine;
 
-class Arc
+class VORONOI_API Arc
 {
 public:
 	friend class BeachLine;

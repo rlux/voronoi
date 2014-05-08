@@ -26,11 +26,13 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <geometry/Point.h>
 
 namespace geometry {
 
-class Rectangle
+class VORONOI_API Rectangle
 {
 public:
 	Rectangle();

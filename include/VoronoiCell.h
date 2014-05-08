@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <VoronoiSite.h>
 #include <VoronoiEdge.h>
 
@@ -33,7 +35,7 @@
 
 namespace voronoi {
 
-class VoronoiCell
+class VORONOI_API VoronoiCell
 {
 public:
 	VoronoiCell(VoronoiSite* site);

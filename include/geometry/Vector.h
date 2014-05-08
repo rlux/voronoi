@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <geometry/real.h>
 
 namespace geometry {
@@ -70,6 +72,6 @@ private:
 	real _y;
 };
 
-Vector operator*(real factor, const Vector& v);
+VORONOI_API Vector operator*(real factor, const Vector& v);
 
 } //end namespace geometry

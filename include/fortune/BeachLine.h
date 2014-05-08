@@ -26,13 +26,15 @@
 
 #pragma once
 
+#include <voronoi_api.h>
+
 #include <VoronoiEdge.h>
 #include <fortune/Arc.h>
 
 namespace voronoi {
 namespace fortune {
 
-class BeachLine
+class VORONOI_API BeachLine
 {
 public:
 	BeachLine();
