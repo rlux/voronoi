@@ -13,8 +13,9 @@ Content
 Requirements
 ---------------------
 
- * [gcc 4.6](http://gcc.gnu.org/)
- * [CMake 2.6](http://www.cmake.org/)
+ * [gcc 4.7](http://gcc.gnu.org/)
+ * [CMake 2.8.12](http://www.cmake.org/)
+ * [Qt5](http://qt-project.org/) (for example)
  
 Building
 ------------------------------------------
@@ -25,7 +26,7 @@ Building
 
 If you also want to compile the demo program, replace the second command with the following:
 
-	> cmake .. -DBUILD_WITH_DEMO=true
+	> cmake .. -DBUILD_WITH_EXAMPLE=true
     
 License
 -----------
